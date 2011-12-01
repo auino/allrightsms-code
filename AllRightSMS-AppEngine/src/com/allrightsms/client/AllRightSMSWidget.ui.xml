@@ -1,0 +1,79 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:t='urn:import:com.allrightsms.client'
+	xmlns:c='urn:import:com.google.gwt.cell.client' xmlns:d='urn:import:com.google.gwt.user.datepicker.client'>
+	<g:HTMLPanel>
+		<div id="widget">
+			<div class="user" style="text-align:right; padding:3px; padding-right:10px;"> <!-- background-color:#f00; -->
+				<g:Label ui:field="signin" />
+			</div>
+			<div id="header">
+				<div ui:field="status" class="status none"></div>
+				<p>Try out roundtripping data to App Engine.</p>
+				<g:Button ui:field="sayHelloButton">Say Hello</g:Button>
+			</div>
+
+			<div id="message">
+				<!-- <p>You are logged in as:</p> <div class="roundRect"> <input ui:field="recipientArea" 
+					type="text" class="field" size="62" /> -->
+				<!-- placeholder="allrightsms@gmail.com" -->
+				<!-- </div> -->
+				<div class="roundRect" style="margin-bottom:60px;">
+
+					<input ui:field="recipientNumber" type="text" class="field"
+						size="62" placeholder="Cell number" />
+					<textarea ui:field="messageArea" cols="46" rows="3"
+						placeholder="Message" />
+
+					<g:Button ui:field="sendMessageButton">Send Message</g:Button>
+
+				</div>
+				
+				<p><h3>Received Message:</h3></p>
+				
+				<div class="roundRect" style="padding:10px;">  <!-- primo thread di messaggi -->
+					<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
+						<div style="display:table-cell; padding:3px; vertical-align:middle;">
+							<t:SmsUserPicture
+								ui:field="smsUserPictureOne" />
+						</div>
+						<div style="display:table-cell; padding:3px; vertical-align:middle; font-weight:bold; font-size:20px;">
+					  		<t:SmsUserName
+								ui:field="smsUserNameOne" />
+						</div>
+						<div style="display:table-cell; padding:3px; vertical-align:middle; margin-right:0px; font-size:14px;">
+							<t:SmsUserNumber
+								ui:field="smsUserNumberOne" />
+						</div>
+					</div>
+					<div class="smstable">
+						<t:AllRightSMSWidget.SmsTable
+							ui:field="smsTableOne" />
+					</div>
+				</div>
+				<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
+					<g:Button ui:field="replyButtonOne">Reply</g:Button>
+				</div>
+				
+				<div class="roundRect" style="padding:10px;"> <!-- secondo thread di messaggi -->
+					<div class="smstable">		
+						<t:AllRightSMSWidget.SmsTable
+							ui:field="smsTableTwo" />
+					</div>
+				</div>
+				<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
+					<g:Button ui:field="replyButtonTwo">Reply</g:Button>
+				</div>
+				
+				<div class="roundRect" style="padding:10px;">  <!-- terzo thread di messaggi -->
+					<div class="smstable">		
+						<t:AllRightSMSWidget.SmsTable
+							ui:field="smsTableThree" />
+					</div>
+				</div>
+				<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
+					<g:Button ui:field="replyButtonThree">Reply</g:Button>
+				</div>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
