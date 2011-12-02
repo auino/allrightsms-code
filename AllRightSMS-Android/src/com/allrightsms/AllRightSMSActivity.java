@@ -308,7 +308,7 @@ public class AllRightSMSActivity extends Activity {
 			newSms = sms2send;
 			for (SmsProxy sms : newSms) {
 				success = sendsms.Send(this, sms.getPhoneNumber(),
-						sms.getTextmessage());// ritorna un booleano
+						sms.getTextmessage(), sms.getDueDate());// ritorna un booleano
 			}
 			if (success)
 				Util.generateNotification(mContext, "New SMS sent correctly!");
