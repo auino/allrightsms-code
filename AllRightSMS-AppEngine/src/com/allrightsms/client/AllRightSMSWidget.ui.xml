@@ -5,11 +5,13 @@
 		<div id="widget">
 			<div class="user" style="text-align:right; padding:3px; padding-right:10px;"> <!-- background-color:#f00; -->
 				<g:Label ui:field="signin" />
+				<g:Label ui:field="logout" />
 			</div>
 			<div id="header">
 				<div ui:field="status" class="status none"></div>
 				<p>Try out roundtripping data to App Engine.</p>
-				<g:Button ui:field="sayHelloButton">Say Hello</g:Button>
+				<g:Button ui:field="sayHelloButton">Say Hello</g:Button> 
+				<br/><br/><a style="margin-left:100px; margin:15px; color:#fff; text-decoration:none;" href="http://allrightsms-code.googlecode.com/svn/trunk/AllRightSMS-Android/bin/AllRightSMS-Android.apk">Download APK-Alpha for Android</a>
 			</div>
 
 			<div id="message">
@@ -46,7 +48,7 @@
 						</div>
 					</div>
 					<div class="smstable">
-						<t:AllRightSMSWidget.SmsTable
+						<t:AllRightSMSWidget.SmsTableOne
 							ui:field="smsTableOne" />
 					</div>
 				</div>
@@ -56,7 +58,7 @@
 				
 				<div class="roundRect" style="padding:10px;"> <!-- secondo thread di messaggi -->
 					<div class="smstable">		
-						<t:AllRightSMSWidget.SmsTable
+						<t:AllRightSMSWidget.SmsTableTwo
 							ui:field="smsTableTwo" />
 					</div>
 				</div>
@@ -66,7 +68,7 @@
 				
 				<div class="roundRect" style="padding:10px;">  <!-- terzo thread di messaggi -->
 					<div class="smstable">		
-						<t:AllRightSMSWidget.SmsTable
+						<t:AllRightSMSWidget.SmsTableThree
 							ui:field="smsTableThree" />
 					</div>
 				</div>

@@ -5,6 +5,8 @@ import java.util.List;
 import com.allrightsms.annotation.ServiceMethod;
 import com.allrightsms.shared.RequestSource;
 import com.allrightsms.shared.SmsChange;
+import com.allrightsms.shared.SmsProxy;
+import com.google.web.bindery.requestfactory.shared.Request;
 
 public class AllRightSMSService {
 
@@ -59,7 +61,7 @@ public class AllRightSMSService {
 		
 		return sms;
 	}
-	
+
 	public void sentC2DM()
 	{
 		DataStore.sendC2DMUpdate(SmsChange.UPDATE + SmsChange.SEPARATOR

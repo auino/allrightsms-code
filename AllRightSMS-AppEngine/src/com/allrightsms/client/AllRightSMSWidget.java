@@ -15,20 +15,13 @@
  */
 package com.allrightsms.client;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.SmsProxy;
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.DateCell;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
@@ -39,19 +32,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -65,7 +53,6 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class AllRightSMSWidget extends Composite {
 
-	private static final int ARRAY_LENGHT = 3;
 	private static final int STATUS_DELAY = 4000;
 	private static final String STATUS_ERROR = "status error";
 	private static final String STATUS_NONE = "status none";
@@ -79,7 +66,7 @@ public class AllRightSMSWidget extends Composite {
 	final MyRequestFactory RequestFactory = GWT.create(MyRequestFactory.class);
 	final EventBus eventBus = new SimpleEventBus();
 	private List<List<SmsProxy>> ThreadSmsReceived = new LinkedList<List<SmsProxy>>();
-	
+
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
 
@@ -91,6 +78,9 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiField
 	Label signin;
+
+	@UiField
+	Label logout;
 
 	@UiField
 	InputElement recipientNumber;
@@ -106,31 +96,31 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiField
 	SmsTable smsTableOne;
-	
+
 	@UiField
 	SmsTable smsTableTwo;
-	
+
 	@UiField
 	SmsTable smsTableThree;
-	
-	@UiField 
-	SmsUserPicture smsUserPictureOne; //, smsUserPictureTwo, smsUserPictureThree;
-	
-	@UiField 
-	SmsUserName smsUserNameOne; //, smsUserNameTwo, smsUserNameThree;
-	
-	@UiField 
-	SmsUserNumber smsUserNumberOne; //, smsUserNumberTwo, smsUserNumberThree;
-	
+
+	@UiField
+	SmsUserPicture smsUserPictureOne; // , smsUserPictureTwo,
+										// smsUserPictureThree;
+	@UiField
+	SmsUserName smsUserNameOne; // , smsUserNameTwo, smsUserNameThree;
+
+	@UiField
+	SmsUserNumber smsUserNumberOne; // , smsUserNumberTwo, smsUserNumberThree;
+
 	@UiField
 	Button replyButtonOne;
-	
+
 	@UiField
 	Button replyButtonTwo;
-	
+
 	@UiField
 	Button replyButtonThree;
-	
+
 	/**
 	 * Timer to clear the UI.
 	 */
@@ -160,93 +150,131 @@ public class AllRightSMSWidget extends Composite {
 		timer.schedule(STATUS_DELAY);
 	}
 
-	public static class SmsTable extends CellTable<SmsProxy> {
-		public Column<SmsProxy, String> textColumn;
-		public Column<SmsProxy, String> numberColumn;
-		public Column<SmsProxy, Date> dateColumn;
-		public Column<SmsProxy, String> replyColumn;
+	public static class SmsTableOne extends SmsTable {
+	}
 
-		interface SmsTableResources extends CellTable.Resources {
-			@Source("SmsTable.css")
-			TableStyle cellTableStyle();
-		}
+	public static class SmsTableTwo extends SmsTable {
+	}
 
-		interface TableStyle extends CellTable.Style {
-			String columnCheckbox();
+	public static class SmsTableThree extends SmsTable {
+	}
 
-			String columnName();
-
-			String columnDate();
-
-			String columnTrash();
-		}
-
-		private static SmsTableResources resources = GWT
-				.create(SmsTableResources.class);
+	public static class SmsTable extends HTML { // CellTable<SmsProxy>
 
 		public SmsTable() {
-			super(20, resources);
-
-			textColumn = new Column<SmsProxy, String>(new TextCell()) {
-				@Override
-				public String getValue(SmsProxy object) {
-					return object.getTextmessage();
-				}
-			};
-			addColumn(textColumn, "Text");
-			// addColumnStyleName(1, "columnFill");
-			addColumnStyleName(1, resources.cellTableStyle().columnName());
-
-		/*	numberColumn = new Column<SmsProxy, String>(new TextCell()) {
-				@Override
-				public String getValue(SmsProxy object) {
-					return object.getPhoneNumber();
-				}
-			};
-			addColumn(numberColumn, "Number");
-			addColumnStyleName(2, resources.cellTableStyle().cellTableEvenRow());
-*/
-			PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE;
-			// TODO controllo data, se < di un giorno OK, altrimenti la cambi in giorno e mese PredefinedFormat.DATE_SHORT
-			dateColumn = new Column<SmsProxy, Date>(new DateCell(  //DatePickerCell - il  DatePickerCell permette di modificare la data
-					DateTimeFormat.getFormat(dateFormat))) { // MONTH_ABBR_DAY)))
-																					// {
-				@Override
-				public Date getValue(SmsProxy s) {
-					Date dueDate = s.getDueDate();
-					return dueDate == null ? new Date() : dueDate;
-				}
-			};
-			addColumn(dateColumn, "Date");
-			addColumnStyleName(2, resources.cellTableStyle().columnDate());
-
-			// setColumnWidth(nameColumn, 65.0, Unit.PCT);
-
-	/*		ButtonCell buttonCell = new ButtonCell(
-					new SafeHtmlRenderer<String>() {
-						public SafeHtml render(String object) {
-							return SafeHtmlUtils.fromTrustedString("Rispondi"); // <img
-																				// src=\"reply.png\"></img>
-						}
-
-						public void render(String object,
-								SafeHtmlBuilder builder) {
-							builder.append(render(object));
-						}
-					});
-
-			replyColumn = new Column<SmsProxy, String>(buttonCell) {
-				@Override
-				public String getValue(SmsProxy object) {
-					return "\u2717"; // Ballot "X" mark
-				}
-			};
-			addColumn(replyColumn, "\u2717");
-			addColumnStyleName(3, resources.cellTableStyle().columnTrash());
-		*/
+			super("");
 		}
+
+		public void clear() {
+			this.setHTML("");
+		}
+
+		public void rebuild(SmsProxy s) {
+			// TODO controllo data, se < di un giorno OK, altrimenti la cambi in
+			// giorno e mese PredefinedFormat.DATE_SHORT
+
+			// A custom date format
+			DateTimeFormat fmt = DateTimeFormat.getFormat("MMM dd"); // "EEEE, MMMM dd, yyyy"
+			// prints Monday, December 17, 2007 in the default locale
+			// GWT.log(fmt.format(s.getDueDate()), null);
+
+			if (s.getReceived())
+				addSms(false, "Name", s.getTextmessage(),
+						fmt.format(s.getDueDate()));
+			else
+				addSms(true, "Me", s.getTextmessage(),
+						fmt.format(s.getDueDate()));
+		}
+
+		public void addSms(boolean fromMe, String from, String msg, String date) {
+			String align = "left", bg = "#ffffff";
+			if (fromMe) {
+				align = "left";
+				bg = "#aaccff";
+			}
+			String html = "" + "<div style=\"padding:3px; text-align:" + align
+					+ "; background-color:" + bg + ";\">" + "<div>" + "<b>"
+					+ from + ":</b> " + msg + "</div>" + "<div>" + date
+					+ "</div>" + "</div>";
+			this.setHTML(this.getHTML() + html);
+		}
+		
+		/*
+		 * public Column<SmsProxy, String> messageColumn;
+		 * 
+		 * 
+		 * public SmsTable() { super("");
+		 * 
+		 * /* messageColumn = new Column<SmsProxy, String>(new TextCell()) {
+		 * 
+		 * @Override public String getValue(SmsProxy object) { return
+		 * object.getTextmessage(); } };
+		 */
+		// addColumn(messageColumn);
+
+		// addColumnStyleName(1, "columnFill");
+		// addColumnStyleName(1, resources.cellTableStyle().columnName());
+
+		/*
+		 * numberColumn = new Column<SmsProxy, String>(new TextCell()) {
+		 * 
+		 * @Override public String getValue(SmsProxy object) { return
+		 * object.getPhoneNumber(); } }; addColumn(numberColumn, "Number"); //
+		 * addColumnStyleName(2, resources.cellTableStyle().cellTableEvenRow());
+		 * 
+		 * PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE; // TODO
+		 * controllo data, se < di un giorno OK, altrimenti la cambi in giorno e
+		 * mese PredefinedFormat.DATE_SHORT dateColumn = new Column<SmsProxy,
+		 * Date>(new DateCell( //DatePickerCell - il DatePickerCell permette di
+		 * modificare la data DateTimeFormat.getFormat(dateFormat))) { //
+		 * MONTH_ABBR_DAY))) // {
+		 * 
+		 * @Override public Date getValue(SmsProxy s) { Date dueDate =
+		 * s.getDueDate(); return dueDate == null ? new Date() : dueDate; } };
+		 * addColumn(dateColumn, "Date");
+		 */
+		// addColumnStyleName(2, resources.cellTableStyle().columnDate());
+
+		// setColumnWidth(nameColumn, 65.0, Unit.PCT);
+
+		/*
+		 * ButtonCell buttonCell = new ButtonCell( new
+		 * SafeHtmlRenderer<String>() { public SafeHtml render(String object) {
+		 * return SafeHtmlUtils.fromTrustedString("Rispondi"); // <img //
+		 * src=\"reply.png\"></img> }
+		 * 
+		 * public void render(String object, SafeHtmlBuilder builder) {
+		 * builder.append(render(object)); } });
+		 * 
+		 * replyColumn = new Column<SmsProxy, String>(buttonCell) {
+		 * 
+		 * @Override public String getValue(SmsProxy object) { return "\u2717";
+		 * // Ballot "X" mark } }; addColumn(replyColumn, "\u2717");
+		 * addColumnStyleName(3, resources.cellTableStyle().columnTrash());
+		 */
+		
+		/*
+		 * StackPanel (che è una figata) 
+		 * String text1 =
+		 * "Lorem ipsum dolor sit amet..."; String text2 =
+		 * "Sed egestas, arcu nec accumsan..."; String text3 =
+		 * "Proin tristique, elit at blandit...";
+		 * 
+		 * HTML html = new HTML(
+		 * "This is <b>HTML</b>.  It will be interpreted as such if you specify "
+		 * + "the asHTML flag.", true);
+		 * 
+		 * Label label = new Label("A"); this.add(label, "One", false); label =
+		 * new Label(text2); this.add(html, "Ciao", true);
+		 * 
+		 * this. label = new Label(text3); this.add(label, "Three", false);
+		 * this.setSize("400px", "200px");
+		 * 
+		 * }
+		 */
+
 	}
-	
+
 	public AllRightSMSWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		sayHelloButton.getElement().setClassName("send centerbtn");
@@ -254,65 +282,43 @@ public class AllRightSMSWidget extends Composite {
 		replyButtonOne.getElement().setClassName("send");
 		replyButtonTwo.getElement().setClassName("send");
 		replyButtonThree.getElement().setClassName("send");
-		
-		// recipientArea.setValue("allrightsms@gmail.com");
-		// recipientArea.setDisabled(true);
 
 		// inizializzo il bus per le chiamate al server
 		RequestFactory.initialize(eventBus);
 
-		// inizio comportamento tabella uno
-		ListDataProvider<SmsProxy> listDataProvider = new ListDataProvider<SmsProxy>();
-		listDataProvider.addDataDisplay(smsTableOne);
-		ThreadSmsReceived.add(0,listDataProvider.getList()); 
+		logout.setText("Logout");
+		logout.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO 
+				Window.alert("Logout???");
+			}
+		});
+
+		//inizializzo le tre liste di messaggi
+		ThreadSmsReceived.add(0, new LinkedList<SmsProxy>());
+		ThreadSmsReceived.add(1, new LinkedList<SmsProxy>());
+		ThreadSmsReceived.add(2, new LinkedList<SmsProxy>());
 		
-/*		smsTableOne.replyColumn
-				.setFieldUpdater(new FieldUpdater<SmsProxy, String>() {
+//		// inizio comportamento tabella uno
+//		ListDataProvider<SmsProxy> listDataProvider = new ListDataProvider<SmsProxy>();
+//		// listDataProvider.addDataDisplay(smsTableOne);
+//		ThreadSmsReceived.add(0, listDataProvider.getList());
+//		// fine comportamento tabella uno
+//
+//		// inizio comportamento tabella due
+//		ListDataProvider<SmsProxy> listDataProvider2 = new ListDataProvider<SmsProxy>();
+//		// listDataProvider2.addDataDisplay(smsTableTwo);
+//		ThreadSmsReceived.add(1, listDataProvider2.getList());
+//		// fine comportamento tabella due
+//
+//		// inizio comportamento tabella tre
+//		ListDataProvider<SmsProxy> listDataProvider3 = new ListDataProvider<SmsProxy>();
+//		// listDataProvider3.addDataDisplay(smsTableThree);
+//		ThreadSmsReceived.add(2, listDataProvider3.getList());
+//		// fine comportamento tabella tre
 
-					@Override
-					public void update(int index, SmsProxy object, String value) {
-						recipientNumber.setValue(object.getPhoneNumber());
-						messageArea.focus();
-
-					}
-				});
-	*/
-		// fine comportamento tabella uno
-
-		//inizio comportamento tabella due
-		ListDataProvider<SmsProxy> listDataProvider2 = new ListDataProvider<SmsProxy>();
-		listDataProvider2.addDataDisplay(smsTableTwo);
-		ThreadSmsReceived.add(1,listDataProvider2.getList()); 
-
-	/*	smsTableTwo.replyColumn
-				.setFieldUpdater(new FieldUpdater<SmsProxy, String>() {
-
-					@Override
-					public void update(int index, SmsProxy object, String value) {
-						recipientNumber.setValue(object.getPhoneNumber());
-						messageArea.focus();
-
-					}
-				});
-		// fine comportamento tabella due
-	*/	
-		//inizio comportamento tabella tre
-		ListDataProvider<SmsProxy> listDataProvider3 = new ListDataProvider<SmsProxy>();
-		listDataProvider3.addDataDisplay(smsTableThree);
-		ThreadSmsReceived.add(2,listDataProvider3.getList()); 
-
-	/*	smsTableThree.replyColumn
-				.setFieldUpdater(new FieldUpdater<SmsProxy, String>() {
-
-					@Override
-					public void update(int index, SmsProxy object, String value) {
-						recipientNumber.setValue(object.getPhoneNumber());
-						messageArea.focus();
-
-					}
-				});
-		// fine comportamento tabella tre
-	*/	
 		sendMessageButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -321,35 +327,34 @@ public class AllRightSMSWidget extends Composite {
 			}
 		});
 
-		//ClickHandler per il bottone reply uno
+		// ClickHandler per il bottone reply uno
 		replyButtonOne.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if(!ThreadSmsReceived.isEmpty() && !ThreadSmsReceived.get(0).isEmpty())
+				if (!ThreadSmsReceived.isEmpty()
+						&& !ThreadSmsReceived.get(0).isEmpty())
 					reply(ThreadSmsReceived.get(0).get(0).getPhoneNumber());
 			}
 		});
-		
+
 		replyButtonTwo.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if(!ThreadSmsReceived.isEmpty() && !ThreadSmsReceived.get(1).isEmpty())
+				if (!ThreadSmsReceived.isEmpty()
+						&& !ThreadSmsReceived.get(1).isEmpty())
 					reply(ThreadSmsReceived.get(1).get(0).getPhoneNumber());
 			}
 		});
-		
+
 		replyButtonThree.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if(!ThreadSmsReceived.isEmpty() && !ThreadSmsReceived.get(2).isEmpty())
+				if (!ThreadSmsReceived.isEmpty()
+						&& !ThreadSmsReceived.get(2).isEmpty())
 					reply(ThreadSmsReceived.get(2).get(0).getPhoneNumber());
 			}
 		});
-		
-		
-		
-		
-		
+
 		sayHelloButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -466,7 +471,8 @@ public class AllRightSMSWidget extends Composite {
 		// modificato
 	}
 
-	private void reply(String number){
+
+	private void reply(String number) {
 		recipientNumber.setValue(number);
 		messageArea.focus();
 	}
@@ -474,33 +480,45 @@ public class AllRightSMSWidget extends Composite {
 	private void retrieveReceivedSms() {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
-		request.queryUnReadSms().fire(new Receiver<List<SmsProxy>>() {
-			// request.querySms().fire(new Receiver<List<SmsProxy>>() {
+	//	request.queryUnReadSms().fire(new Receiver<List<SmsProxy>>() {
+			request.querySms().fire(new Receiver<List<SmsProxy>>() {
 			@Override
 			public void onSuccess(List<SmsProxy> response) {
-				if (response.size() > 0) {  //&& threadReceived.size() != response.size()
-					signin.setText(response.get(0).getEmailAddress());
+				if (response.size() > 0) { // && threadReceived.size() !=
+											// response.size()
+					// signin.setText(response.get(0).getEmailAddress());
 
+					
 					ThreadSmsReceived.get(0).clear();
 					ThreadSmsReceived.get(1).clear();
 					ThreadSmsReceived.get(2).clear();
+					 
+					smsTableOne.clear();
+					smsTableTwo.clear();
+					smsTableThree.clear();
 					for (SmsProxy sms : response) {
-						smsUserNumberOne.setText(sms.getPhoneNumber());
+						//ricostruisco le tabelle dei thread
+						smsTableOne.rebuild(sms);
+						smsTableTwo.rebuild(sms);
+						smsTableThree.rebuild(sms);
 						
+						//scrivo le info nella lista
 						ThreadSmsReceived.get(0).add(sms);
-						
-					
-						ThreadSmsReceived.get(1).add(sms);
-						ThreadSmsReceived.get(2).add(sms);
+						 ThreadSmsReceived.get(1).add(sms);
+						 ThreadSmsReceived.get(2).add(sms);
+						 
+						//aggiorno le intestazioni della lista
+						smsUserNumberOne.setText(sms.getPhoneNumber());
+//						smsUserNumberOne.setText(sms.getPhoneNumber());
+//						smsUserNumberOne.setText(sms.getPhoneNumber());
 					}
-					
-				
-				//	SoundController soundController = new SoundController();
-				//	@SuppressWarnings("deprecation")
-				//	Sound sound = soundController.createSound(
-				//			Sound.MIME_TYPE_AUDIO_MPEG,
-				//			"bells-message.mp3");
-				//	sound.play();
+
+					// SoundController soundController = new SoundController();
+					// @SuppressWarnings("deprecation")
+					// Sound sound = soundController.createSound(
+					// Sound.MIME_TYPE_AUDIO_MPEG,
+					// "bells-message.mp3");
+					// sound.play();
 				}
 			}
 		});
@@ -541,11 +559,11 @@ public class AllRightSMSWidget extends Composite {
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override
 			public void onSuccess(SmsProxy sms) {
-				/*
-				 * Window.alert("UPDATE SUCCESS:(" + sms.getId() + "): " +
-				 * sms.getPhoneNumber() + "\n messaggio: " +
-				 * sms.getTextmessage());
-				 */
+
+//				Window.alert("UPDATE SUCCESS:(" + sms.getId() + "): "
+//						+ sms.getPhoneNumber() + "\n messaggio: "
+//						+ sms.getTextmessage());
+
 				setStatus("Sms Inviato Correttamente", false);
 			}
 
@@ -561,12 +579,12 @@ public class AllRightSMSWidget extends Composite {
 				.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(Void v) {
-						Window.alert("DELETE SUCCESS");
+//						Window.alert("DELETE SUCCESS");
 					}
 
 					@Override
 					public void onFailure(ServerFailure error) {
-						Window.alert("UNABLE TO DELETE");
+//						Window.alert("UNABLE TO DELETE");
 					}
 				});
 	}
