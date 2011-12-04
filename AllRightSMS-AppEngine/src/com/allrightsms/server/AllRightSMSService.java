@@ -5,8 +5,6 @@ import java.util.List;
 import com.allrightsms.annotation.ServiceMethod;
 import com.allrightsms.shared.RequestSource;
 import com.allrightsms.shared.SmsChange;
-import com.allrightsms.shared.SmsProxy;
-import com.google.web.bindery.requestfactory.shared.Request;
 
 public class AllRightSMSService {
 
@@ -41,7 +39,7 @@ public class AllRightSMSService {
 	public List<Sms> querySms() { //usata via web per recuperare tutti i messaggi... -- SENT_WEB
 		return db.findAll(RequestSource.SENT_WEB);
 	}
-
+	
 	@ServiceMethod
 	public List<Sms> queryUnSentSms() { //usata via telefono per recuperare i messaggi da inviare
 		List<Sms> sms = db.findAll(RequestSource.SENT_MOBILE); // certo tutti gli sms non inviati   -- 
@@ -52,6 +50,7 @@ public class AllRightSMSService {
 		return sms;
 	}
 	
+	@ServiceMethod
 	public List<Sms> queryUnReadSms(){ //usata via web per recuperare gli sms in arrivo
 		List<Sms> sms = db.findAll(RequestSource.SENT_WEB_RECEIVED);
 		for (Sms s : sms) {
@@ -62,6 +61,7 @@ public class AllRightSMSService {
 		return sms;
 	}
 
+	@ServiceMethod
 	public void sentC2DM()
 	{
 		DataStore.sendC2DMUpdate(SmsChange.UPDATE + SmsChange.SEPARATOR

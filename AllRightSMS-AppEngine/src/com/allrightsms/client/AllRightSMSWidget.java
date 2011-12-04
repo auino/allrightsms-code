@@ -15,6 +15,9 @@
  */
 package com.allrightsms.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +34,6 @@ import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -45,7 +47,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -57,7 +58,7 @@ public class AllRightSMSWidget extends Composite {
 	private static final String STATUS_ERROR = "status error";
 	private static final String STATUS_NONE = "status none";
 	private static final String STATUS_SUCCESS = "status success";
-	private static final int DELAY_MS = 1000; // delay of research incoming, 1
+	private static final int DELAY_MS = 5000; // delay of research incoming, 1
 												// 000
 												// minute
 
@@ -65,8 +66,10 @@ public class AllRightSMSWidget extends Composite {
 	private SmsProxy smsProxy;
 	final MyRequestFactory RequestFactory = GWT.create(MyRequestFactory.class);
 	final EventBus eventBus = new SimpleEventBus();
-	private List<List<SmsProxy>> ThreadSmsReceived = new LinkedList<List<SmsProxy>>();
-
+	private final List<List<SmsProxy>> ThreadSmsReceived = new LinkedList<List<SmsProxy>>();
+	private final List<SmsProxy> allMessage = new LinkedList<SmsProxy>();
+	private final List<String> phoneNumber = new LinkedList<String>();
+	
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
 
@@ -187,12 +190,12 @@ public class AllRightSMSWidget extends Composite {
 		}
 
 		public void addSms(boolean fromMe, String from, String msg, String date) {
-			String align = "left", bg = "#ffffff";
+			String align = "left", bg = "#aaccff";
 			if (fromMe) {
-				align = "left";
-				bg = "#aaccff";
+			//	align = "left";
+				bg = "#ffffff";
 			}
-			String html = "" + "<div style=\"padding:3px; text-align:" + align
+			String html = "" + "<div class=\"roundRect\" style=\"padding:3px; text-align:" + align
 					+ "; background-color:" + bg + ";\">" + "<div>" + "<b>"
 					+ from + ":</b> " + msg + "</div>" + "<div>" + date
 					+ "</div>" + "</div>";
@@ -222,7 +225,7 @@ public class AllRightSMSWidget extends Composite {
 		 * object.getPhoneNumber(); } }; addColumn(numberColumn, "Number"); //
 		 * addColumnStyleName(2, resources.cellTableStyle().cellTableEvenRow());
 		 * 
-		 * PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE; // TODO
+		 * PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE; // 
 		 * controllo data, se < di un giorno OK, altrimenti la cambi in giorno e
 		 * mese PredefinedFormat.DATE_SHORT dateColumn = new Column<SmsProxy,
 		 * Date>(new DateCell( //DatePickerCell - il DatePickerCell permette di
@@ -470,6 +473,42 @@ public class AllRightSMSWidget extends Composite {
 		}, DELAY_MS);
 		// modificato
 	}
+	
+	public static final Comparator<? super SmsProxy> TASK_COMPARATOR = new Comparator<SmsProxy>() {
+	    public int compare(SmsProxy t0, SmsProxy t1) {
+	        // Sort sms by due date within each group
+	        return compareDueDate(t0, t1);
+	      }
+	  
+
+//	    boolean isDone(SmsProxy t) {
+//	      Boolean done = t.isDone();
+//	      return done != null && done;
+//	    }
+
+	    int compareDueDate(SmsProxy t0, SmsProxy t1) {
+	      Date d0 = t0.getDueDate();
+	      Date d1 = t1.getDueDate();
+
+	      if (d0 == null) {
+	        if (d1 == null) {
+	          return 0;
+	        } else {
+	          return -1;
+	        }
+	      } else if (d1 == null) {
+	        return 1;
+	      }
+	      long delta = d0.getTime() - d1.getTime();
+	      if (delta < 0) {
+	        return -1;
+	      } else if (delta > 0) {
+	        return 1;
+	      } else {
+	        return 0;
+	      }
+	    }
+	  };
 
 
 	private void reply(String number) {
@@ -480,39 +519,31 @@ public class AllRightSMSWidget extends Composite {
 	private void retrieveReceivedSms() {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
-	//	request.queryUnReadSms().fire(new Receiver<List<SmsProxy>>() {
-			request.querySms().fire(new Receiver<List<SmsProxy>>() {
-			@Override
+		request.querySms().fire(new Receiver<List<SmsProxy>>() {
+		@Override
 			public void onSuccess(List<SmsProxy> response) {
 				if (response.size() > 0) { // && threadReceived.size() !=
 											// response.size()
 					// signin.setText(response.get(0).getEmailAddress());
-
 					
-					ThreadSmsReceived.get(0).clear();
-					ThreadSmsReceived.get(1).clear();
-					ThreadSmsReceived.get(2).clear();
-					 
-					smsTableOne.clear();
-					smsTableTwo.clear();
-					smsTableThree.clear();
-					for (SmsProxy sms : response) {
-						//ricostruisco le tabelle dei thread
-						smsTableOne.rebuild(sms);
-						smsTableTwo.rebuild(sms);
-						smsTableThree.rebuild(sms);
-						
-						//scrivo le info nella lista
-						ThreadSmsReceived.get(0).add(sms);
-						 ThreadSmsReceived.get(1).add(sms);
-						 ThreadSmsReceived.get(2).add(sms);
-						 
-						//aggiorno le intestazioni della lista
-						smsUserNumberOne.setText(sms.getPhoneNumber());
-//						smsUserNumberOne.setText(sms.getPhoneNumber());
-//						smsUserNumberOne.setText(sms.getPhoneNumber());
-					}
-
+					// sort first the thelphone number
+			        ArrayList<SmsProxy> sortedTasks = new ArrayList<SmsProxy>(response);
+			        Collections.sort(sortedTasks, TASK_COMPARATOR);
+					
+			        allMessage.clear();
+			        allMessage.addAll(sortedTasks);
+			   		phoneNumber.clear();
+					
+					int i=0;
+					while (i < allMessage.size() && i<3) { // o ci sono meno elementi da mostrare o ne mostro solo gli ultimi 4
+					
+						if(!phoneNumber.contains(allMessage.get(i).getPhoneNumber())){
+							phoneNumber.add(allMessage.get(i).getPhoneNumber());
+						}
+						i++;
+					}			
+					constructForNumber();
+					
 					// SoundController soundController = new SoundController();
 					// @SuppressWarnings("deprecation")
 					// Sound sound = soundController.createSound(
@@ -523,6 +554,34 @@ public class AllRightSMSWidget extends Composite {
 			}
 		});
 	}
+
+	private void constructForNumber(){
+		smsTableOne.clear();
+		smsTableTwo.clear();
+		smsTableThree.clear();
+		ThreadSmsReceived.get(0).clear();
+		ThreadSmsReceived.get(1).clear();
+		ThreadSmsReceived.get(2).clear();
+		
+		for (SmsProxy s : allMessage) {
+			if (s.getPhoneNumber().equals(phoneNumber.get(0))){
+				ThreadSmsReceived.get(0).add(s);
+				smsUserNumberOne.setText(s.getPhoneNumber());
+				smsTableOne.rebuild(s);
+			}
+			if(s.getPhoneNumber().equals(phoneNumber.get(1))){
+				ThreadSmsReceived.get(1).add(s);
+				smsUserNumberOne.setText(s.getPhoneNumber());
+				smsTableTwo.rebuild(s);		
+					
+			}
+			if(s.getPhoneNumber().equals(phoneNumber.get(2))){
+				ThreadSmsReceived.get(2).add(s);
+				smsUserNumberOne.setText(s.getPhoneNumber());
+				smsTableThree.rebuild(s);
+			}
+		}
+ 	}
 
 	private void create() {
 		if (recipientNumber.getValue().isEmpty()

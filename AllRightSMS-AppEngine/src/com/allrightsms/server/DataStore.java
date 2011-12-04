@@ -30,7 +30,7 @@ public class DataStore {
 	}
 
 	/**
-	 * Find a {@link Task} by id.
+	 * Find a {@link Sms} by id.
 	 * 
 	 * @param id
 	 *            the {@link Sms} id
@@ -56,7 +56,7 @@ public class DataStore {
 			pm.close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<Sms> findAll(RequestSource sent) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
