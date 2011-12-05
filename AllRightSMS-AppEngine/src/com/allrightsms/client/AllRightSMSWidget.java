@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import sun.util.LocaleServiceProviderPool.LocalizedObjectGetter;
+
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.SmsProxy;
@@ -109,14 +111,32 @@ public class AllRightSMSWidget extends Composite {
 	SmsTable smsTableThree;
 
 	@UiField
-	SmsUserPicture smsUserPictureOne; // , smsUserPictureTwo,
-										// smsUserPictureThree;
+	SmsUserPicture smsUserPictureOne; 
+	
 	@UiField
-	SmsUserName smsUserNameOne; // , smsUserNameTwo, smsUserNameThree;
+	SmsUserName smsUserNameOne; 
 
 	@UiField
-	SmsUserNumber smsUserNumberOne; // , smsUserNumberTwo, smsUserNumberThree;
+	SmsUserNumber smsUserNumberOne; 
 
+	@UiField
+	SmsUserPicture smsUserPictureTwo; 
+										
+	@UiField
+	SmsUserName smsUserNameTwo; 
+
+	@UiField
+	SmsUserNumber smsUserNumberTwo; 
+
+	@UiField
+	SmsUserPicture smsUserPictureThree; 
+	
+	@UiField
+	SmsUserName smsUserNameThree; 
+
+	@UiField
+	SmsUserNumber smsUserNumberThree; 
+	
 	@UiField
 	Button replyButtonOne;
 
@@ -328,7 +348,10 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
-				create();
+				if(ValidatePhoneNumber(recipientNumber.getValue()) || messageArea.getValue()=="")
+					create();
+				else
+					setStatus("Impossibile inviare il messaggio", false);
 			}
 		});
 
@@ -531,13 +554,20 @@ public class AllRightSMSWidget extends Composite {
 					// sort first the thelphone number
 			        ArrayList<SmsProxy> sortedTasks = new ArrayList<SmsProxy>(response);
 			        Collections.sort(sortedTasks, TASK_COMPARATOR);
+			        
 					
+			        
 			        allMessage.clear();
 			        allMessage.addAll(sortedTasks);
+			        Collections.reverse(sortedTasks);
 			   		phoneNumber.clear();
 					
+//			   		for (SmsProxy s : sortedTasks) {
+//			   			GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
+//					}
+			   		
 					int i=0;
-					while (i < allMessage.size() && i<THREADS_NUMBER) { // o ci sono meno elementi da mostrare o ne mostro solo gli ultimi 4
+					while (i < sortedTasks.size() && i<THREADS_NUMBER) { // o ci sono meno elementi da mostrare o ne mostro solo gli ultimi 4
 					
 						if(!phoneNumber.contains(allMessage.get(i).getPhoneNumber())){
 							phoneNumber.add(allMessage.get(i).getPhoneNumber());
@@ -573,13 +603,13 @@ public class AllRightSMSWidget extends Composite {
 			}
 			if(phoneNumber.size()>1 && s.getPhoneNumber().equals(phoneNumber.get(1))){
 				ThreadSmsReceived.get(1).add(s);
-				smsUserNumberOne.setText(s.getPhoneNumber());
+				smsUserNumberTwo.setText(s.getPhoneNumber());
 				smsTableTwo.rebuild(s);		
 					
 			}
 			if(phoneNumber.size()>2 && s.getPhoneNumber().equals(phoneNumber.get(2))){
 				ThreadSmsReceived.get(2).add(s);
-				smsUserNumberOne.setText(s.getPhoneNumber());
+				smsUserNumberThree.setText(s.getPhoneNumber());
 				smsTableThree.rebuild(s);
 			}
 		}

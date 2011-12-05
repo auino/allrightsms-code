@@ -59,6 +59,23 @@
 				</div>
 				
 				<div class="roundRect" style="padding:10px;"> <!-- secondo thread di messaggi -->
+					<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
+						<div style="display:table-cell; padding:3px; vertical-align:middle;">
+							<t:SmsUserPicture
+								ui:field="smsUserPictureTwo" />
+						</div>
+						<div style="display:table-cell; padding:3px; margin-right:0px;">
+							<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
+						  		<t:SmsUserName
+									ui:field="smsUserNameTwo" />
+							</div>
+							<div style="vertical-align:middle; text-align:left; font-size:14px;">
+								<t:SmsUserNumber
+									ui:field="smsUserNumberTwo" />
+							</div>
+						</div>
+					</div>					
+					
 					<div class="smstable">		
 						<t:AllRightSMSWidget.SmsTableTwo
 							ui:field="smsTableTwo" />
@@ -69,6 +86,22 @@
 				</div>
 				
 				<div class="roundRect" style="padding:10px;">  <!-- terzo thread di messaggi -->
+					<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
+						<div style="display:table-cell; padding:3px; vertical-align:middle;">
+							<t:SmsUserPicture
+								ui:field="smsUserPictureThree" />
+						</div>
+						<div style="display:table-cell; padding:3px; margin-right:0px;">
+							<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
+						  		<t:SmsUserName
+									ui:field="smsUserNameThree" />
+							</div>
+							<div style="vertical-align:middle; text-align:left; font-size:14px;">
+								<t:SmsUserNumber
+									ui:field="smsUserNumberThree" />
+							</div>
+						</div>
+					</div>
 					<div class="smstable">		
 						<t:AllRightSMSWidget.SmsTableThree
 							ui:field="smsTableThree" />
