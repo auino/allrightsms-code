@@ -38,13 +38,15 @@
 							<t:SmsUserPicture
 								ui:field="smsUserPictureOne" />
 						</div>
-						<div style="display:table-cell; padding:3px; vertical-align:middle; font-weight:bold; font-size:20px;">
-					  		<t:SmsUserName
-								ui:field="smsUserNameOne" />
-						</div>
-						<div style="display:table-cell; padding:3px; vertical-align:middle; margin-right:0px; font-size:14px;">
-							<t:SmsUserNumber
-								ui:field="smsUserNumberOne" />
+						<div style="display:table-cell; padding:3px; margin-right:0px;">
+							<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
+						  		<t:SmsUserName
+									ui:field="smsUserNameOne" />
+							</div>
+							<div style="vertical-align:middle; text-align:left; font-size:14px;">
+								<t:SmsUserNumber
+									ui:field="smsUserNumberOne" />
+							</div>
 						</div>
 					</div>
 					<div class="smstable">

@@ -54,6 +54,8 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class AllRightSMSWidget extends Composite {
 
+	private static final int THREADS_NUMBER = 3;
+	private static final int MESSAGES_NUMBER = 4;
 	private static final int STATUS_DELAY = 4000;
 	private static final String STATUS_ERROR = "status error";
 	private static final String STATUS_NONE = "status none";
@@ -535,7 +537,7 @@ public class AllRightSMSWidget extends Composite {
 			   		phoneNumber.clear();
 					
 					int i=0;
-					while (i < allMessage.size() && i<3) { // o ci sono meno elementi da mostrare o ne mostro solo gli ultimi 4
+					while (i < allMessage.size() && i<THREADS_NUMBER) { // o ci sono meno elementi da mostrare o ne mostro solo gli ultimi 4
 					
 						if(!phoneNumber.contains(allMessage.get(i).getPhoneNumber())){
 							phoneNumber.add(allMessage.get(i).getPhoneNumber());
@@ -564,24 +566,50 @@ public class AllRightSMSWidget extends Composite {
 		ThreadSmsReceived.get(2).clear();
 		
 		for (SmsProxy s : allMessage) {
-			if (s.getPhoneNumber().equals(phoneNumber.get(0))){
+			if (phoneNumber.size()>0 &&s.getPhoneNumber().equals(phoneNumber.get(0))){
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				smsTableOne.rebuild(s);
 			}
-			if(s.getPhoneNumber().equals(phoneNumber.get(1))){
+			if(phoneNumber.size()>1 && s.getPhoneNumber().equals(phoneNumber.get(1))){
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				smsTableTwo.rebuild(s);		
 					
 			}
-			if(s.getPhoneNumber().equals(phoneNumber.get(2))){
+			if(phoneNumber.size()>2 && s.getPhoneNumber().equals(phoneNumber.get(2))){
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				smsTableThree.rebuild(s);
 			}
 		}
+		//TODO inserire il numero massimo di messaggi
+//		MESSAGES_NUMBER
  	}
+	
+	private String purgePrefix(String num)
+	{
+		if(num.startsWith("+"))
+			return num;
+		return null;
+	}
+	
+	private boolean ValidatePhoneNumber(String phNumber)
+    {
+            String numPattern = "(\\d-)?(\\d{3}-)?\\d{3}-\\d{4}";
+            return phNumber.matches(numPattern);
+            
+//            Uses Example
+//            ValidatePhoneNumber("1-555-555-5555");
+//            ValidatePhoneNumber("1.555-555-5555");
+//            ValidatePhoneNumber("555-555-5555");
+//            ValidatePhoneNumber("555 555-5555");
+//            ValidatePhoneNumber("1 555 5555");
+//            ValidatePhoneNumber("555-WinNow");
+//            ValidatePhoneNumber("1-555-555");
+//            ValidatePhoneNumber("555-5555");
+            
+    }
 
 	private void create() {
 		if (recipientNumber.getValue().isEmpty()
