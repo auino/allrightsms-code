@@ -116,13 +116,17 @@ public class Util {
     /**
      * Display a notification containing the given string.
      */
-    public static void generateNotification(Context context, String message) {
+    public static void generateNotification(Context context, String message, boolean c2dm) {
         int icon = R.drawable.status_icon;
         long when = System.currentTimeMillis();
 
         Notification notification = new Notification(icon, message, when);
-        notification.setLatestEventInfo(context, "C2DM Notification", message,
+        if(c2dm)
+        	notification.setLatestEventInfo(context, "C2DM Notification", message,
                 PendingIntent.getActivity(context, 0, null, PendingIntent.FLAG_CANCEL_CURRENT));
+        else
+        	notification.setLatestEventInfo(context, "AllrightSMS Action", message,
+                    PendingIntent.getActivity(context, 0, null, PendingIntent.FLAG_CANCEL_CURRENT));
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
         SharedPreferences settings = Util.getSharedPreferences(context);

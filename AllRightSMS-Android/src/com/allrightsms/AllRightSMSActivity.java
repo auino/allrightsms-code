@@ -98,7 +98,7 @@ public class AllRightSMSActivity extends Activity {
 
 			// Display a notification
 			Util.generateNotification(mContext,
-					String.format(message, accountName));
+					String.format(message, accountName), true);
 		}
 	};
 
@@ -299,7 +299,6 @@ public class AllRightSMSActivity extends Activity {
 	}
 
 	public void sendSMS(List<SmsProxy> sms2send) {
-		// TODO Auto-generated method stub
 		// code to send SMS here
 		if (!sms2send.isEmpty()) {
 			SendSMS sendsms = new SendSMS();
@@ -311,42 +310,43 @@ public class AllRightSMSActivity extends Activity {
 						sms.getTextmessage(), sms.getDueDate());// ritorna un booleano
 			}
 			if (success)
-				Util.generateNotification(mContext, "New SMS sent correctly!");
+				Util.generateNotification(mContext, "New SMS sent correctly!", false);
 		} else {
 			// nothing to do!
 			Util.generateNotification(mContext,
-					"Unable to send new SMS or No sms to send!");
+					"Unable to send new SMS or No sms to send!", false);
 		}
 	}
 
 	// metodo per la ricezione di SMS
-	public void receivedSms(SmsMessage[] smsMessage) {
-		final String mex = smsMessage[0].getMessageBody().toString();
-		new AsyncTask<Void, Void, Void>() {
-
-			@Override
-			protected Void doInBackground(Void... arg0) {
-
-				MyRequestFactory requestFactory = Util.getRequestFactory(
-						mContext, MyRequestFactory.class);
-
-				AllRightSMSRequest request = requestFactory
-						.allRightSMSRequest();
-
-				smsProxy = request.edit(smsProxy);
-				smsProxy.setDueDate(new Date());
-				smsProxy.setEmailAddress("");
-				smsProxy.setReceived(true);
-				smsProxy.setRead(false);
-				smsProxy.setPhoneNumber("boooo");
-				smsProxy.setTextmessage(mex);
-
-				request.updateSms(smsProxy).fire();
-
-				return null;
-			}
-
-		}.execute();
-	}
+//	public void receivedSms(SmsMessage[] smsMessage) {
+//		final String mex = smsMessage[0].getMessageBody().toString();
+//		new AsyncTask<Void, Void, Void>() {
+//
+//			@Override
+//			protected Void doInBackground(Void... arg0) {
+//
+//				MyRequestFactory requestFactory = Util.getRequestFactory(
+//						mContext, MyRequestFactory.class);
+//
+//				AllRightSMSRequest request = requestFactory
+//						.allRightSMSRequest();
+//
+//				smsProxy = request.edit(smsProxy);
+//				smsProxy.setDueDate(new Date());
+//				smsProxy.setEmailAddress("");
+//				smsProxy.setReceived(true);
+//				smsProxy.setRead(false);
+//				
+//				smsProxy.setPhoneNumber("boooo");
+//				smsProxy.setTextmessage(mex);
+//
+//				request.updateSms(smsProxy).fire();
+//
+//				return null;
+//			}
+//
+//		}.execute();
+//	}
 
 }
