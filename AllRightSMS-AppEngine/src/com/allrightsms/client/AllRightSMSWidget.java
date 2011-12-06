@@ -73,7 +73,7 @@ public class AllRightSMSWidget extends Composite {
 	private final List<List<SmsProxy>> ThreadSmsReceived = new LinkedList<List<SmsProxy>>();
 	private final List<SmsProxy> allMessage = new LinkedList<SmsProxy>();
 	private final List<String> phoneNumber = new LinkedList<String>();
-	
+
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
 
@@ -111,32 +111,32 @@ public class AllRightSMSWidget extends Composite {
 	SmsTable smsTableThree;
 
 	@UiField
-	SmsUserPicture smsUserPictureOne; 
-	
-	@UiField
-	SmsUserName smsUserNameOne; 
+	SmsUserPicture smsUserPictureOne;
 
 	@UiField
-	SmsUserNumber smsUserNumberOne; 
+	SmsUserName smsUserNameOne;
 
 	@UiField
-	SmsUserPicture smsUserPictureTwo; 
-										
-	@UiField
-	SmsUserName smsUserNameTwo; 
+	SmsUserNumber smsUserNumberOne;
 
 	@UiField
-	SmsUserNumber smsUserNumberTwo; 
+	SmsUserPicture smsUserPictureTwo;
 
 	@UiField
-	SmsUserPicture smsUserPictureThree; 
-	
-	@UiField
-	SmsUserName smsUserNameThree; 
+	SmsUserName smsUserNameTwo;
 
 	@UiField
-	SmsUserNumber smsUserNumberThree; 
-	
+	SmsUserNumber smsUserNumberTwo;
+
+	@UiField
+	SmsUserPicture smsUserPictureThree;
+
+	@UiField
+	SmsUserName smsUserNameThree;
+
+	@UiField
+	SmsUserNumber smsUserNumberThree;
+
 	@UiField
 	Button replyButtonOne;
 
@@ -214,16 +214,17 @@ public class AllRightSMSWidget extends Composite {
 		public void addSms(boolean fromMe, String from, String msg, String date) {
 			String align = "left", bg = "#aaccff";
 			if (fromMe) {
-			//	align = "left";
+				// align = "left";
 				bg = "#ffffff";
 			}
-			String html = "" + "<div class=\"roundRect\" style=\"padding:3px; text-align:" + align
-					+ "; background-color:" + bg + ";\">" + "<div>" + "<b>"
-					+ from + ":</b> " + msg + "</div>" + "<div>" + date
+			String html = ""
+					+ "<div class=\"roundRect\" style=\"padding:3px; text-align:"
+					+ align + "; background-color:" + bg + ";\">" + "<div>"
+					+ "<b>" + from + ":</b> " + msg + "</div>" + "<div>" + date
 					+ "</div>" + "</div>";
 			this.setHTML(this.getHTML() + html);
 		}
-		
+
 		/*
 		 * public Column<SmsProxy, String> messageColumn;
 		 * 
@@ -247,7 +248,7 @@ public class AllRightSMSWidget extends Composite {
 		 * object.getPhoneNumber(); } }; addColumn(numberColumn, "Number"); //
 		 * addColumnStyleName(2, resources.cellTableStyle().cellTableEvenRow());
 		 * 
-		 * PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE; // 
+		 * PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE; //
 		 * controllo data, se < di un giorno OK, altrimenti la cambi in giorno e
 		 * mese PredefinedFormat.DATE_SHORT dateColumn = new Column<SmsProxy,
 		 * Date>(new DateCell( //DatePickerCell - il DatePickerCell permette di
@@ -277,10 +278,9 @@ public class AllRightSMSWidget extends Composite {
 		 * // Ballot "X" mark } }; addColumn(replyColumn, "\u2717");
 		 * addColumnStyleName(3, resources.cellTableStyle().columnTrash());
 		 */
-		
+
 		/*
-		 * StackPanel (che è una figata) 
-		 * String text1 =
+		 * StackPanel (che è una figata) String text1 =
 		 * "Lorem ipsum dolor sit amet..."; String text2 =
 		 * "Sed egestas, arcu nec accumsan..."; String text3 =
 		 * "Proin tristique, elit at blandit...";
@@ -316,39 +316,42 @@ public class AllRightSMSWidget extends Composite {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO 
+				// TODO
 				Window.alert("Logout???");
 			}
 		});
 
-		//inizializzo le tre liste di messaggi
+		// inizializzo le tre liste di messaggi
 		ThreadSmsReceived.add(0, new LinkedList<SmsProxy>());
 		ThreadSmsReceived.add(1, new LinkedList<SmsProxy>());
 		ThreadSmsReceived.add(2, new LinkedList<SmsProxy>());
-		
-//		// inizio comportamento tabella uno
-//		ListDataProvider<SmsProxy> listDataProvider = new ListDataProvider<SmsProxy>();
-//		// listDataProvider.addDataDisplay(smsTableOne);
-//		ThreadSmsReceived.add(0, listDataProvider.getList());
-//		// fine comportamento tabella uno
-//
-//		// inizio comportamento tabella due
-//		ListDataProvider<SmsProxy> listDataProvider2 = new ListDataProvider<SmsProxy>();
-//		// listDataProvider2.addDataDisplay(smsTableTwo);
-//		ThreadSmsReceived.add(1, listDataProvider2.getList());
-//		// fine comportamento tabella due
-//
-//		// inizio comportamento tabella tre
-//		ListDataProvider<SmsProxy> listDataProvider3 = new ListDataProvider<SmsProxy>();
-//		// listDataProvider3.addDataDisplay(smsTableThree);
-//		ThreadSmsReceived.add(2, listDataProvider3.getList());
-//		// fine comportamento tabella tre
+
+		// // inizio comportamento tabella uno
+		// ListDataProvider<SmsProxy> listDataProvider = new
+		// ListDataProvider<SmsProxy>();
+		// // listDataProvider.addDataDisplay(smsTableOne);
+		// ThreadSmsReceived.add(0, listDataProvider.getList());
+		// // fine comportamento tabella uno
+		//
+		// // inizio comportamento tabella due
+		// ListDataProvider<SmsProxy> listDataProvider2 = new
+		// ListDataProvider<SmsProxy>();
+		// // listDataProvider2.addDataDisplay(smsTableTwo);
+		// ThreadSmsReceived.add(1, listDataProvider2.getList());
+		// // fine comportamento tabella due
+		//
+		// // inizio comportamento tabella tre
+		// ListDataProvider<SmsProxy> listDataProvider3 = new
+		// ListDataProvider<SmsProxy>();
+		// // listDataProvider3.addDataDisplay(smsTableThree);
+		// ThreadSmsReceived.add(2, listDataProvider3.getList());
+		// // fine comportamento tabella tre
 
 		sendMessageButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
-				if(ValidatePhoneNumber(recipientNumber.getValue()) || messageArea.getValue()=="")
+				if (ValidatePhoneNumber(recipientNumber.getValue()))
 					create();
 				else
 					setStatus("Impossibile inviare il messaggio", false);
@@ -498,43 +501,41 @@ public class AllRightSMSWidget extends Composite {
 		}, DELAY_MS);
 		// modificato
 	}
-	
+
 	public static final Comparator<? super SmsProxy> TASK_COMPARATOR = new Comparator<SmsProxy>() {
-	    public int compare(SmsProxy t0, SmsProxy t1) {
-	        // Sort sms by due date within each group
-	        return compareDueDate(t0, t1);
-	      }
-	  
+		public int compare(SmsProxy t0, SmsProxy t1) {
+			// Sort sms by due date within each group
+			return compareDueDate(t0, t1);
+		}
 
-//	    boolean isDone(SmsProxy t) {
-//	      Boolean done = t.isDone();
-//	      return done != null && done;
-//	    }
+		// boolean isDone(SmsProxy t) {
+		// Boolean done = t.isDone();
+		// return done != null && done;
+		// }
 
-	    int compareDueDate(SmsProxy t0, SmsProxy t1) {
-	      Date d0 = t0.getDueDate();
-	      Date d1 = t1.getDueDate();
+		int compareDueDate(SmsProxy t0, SmsProxy t1) {
+			Date d0 = t0.getDueDate();
+			Date d1 = t1.getDueDate();
 
-	      if (d0 == null) {
-	        if (d1 == null) {
-	          return 0;
-	        } else {
-	          return -1;
-	        }
-	      } else if (d1 == null) {
-	        return 1;
-	      }
-	      long delta = d0.getTime() - d1.getTime();
-	      if (delta < 0) {
-	        return -1;
-	      } else if (delta > 0) {
-	        return 1;
-	      } else {
-	        return 0;
-	      }
-	    }
-	  };
-
+			if (d0 == null) {
+				if (d1 == null) {
+					return 0;
+				} else {
+					return -1;
+				}
+			} else if (d1 == null) {
+				return 1;
+			}
+			long delta = d0.getTime() - d1.getTime();
+			if (delta < 0) {
+				return 1;
+			} else if (delta > 0) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	};
 
 	private void reply(String number) {
 		recipientNumber.setValue(number);
@@ -545,101 +546,115 @@ public class AllRightSMSWidget extends Composite {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		request.querySms().fire(new Receiver<List<SmsProxy>>() {
-		@Override
+			@Override
 			public void onSuccess(List<SmsProxy> response) {
 				if (response.size() > 0) { // && threadReceived.size() !=
 											// response.size()
 					// signin.setText(response.get(0).getEmailAddress());
-					
+
 					// sort first the thelphone number
-			        ArrayList<SmsProxy> sortedTasks = new ArrayList<SmsProxy>(response);
-			        Collections.sort(sortedTasks, TASK_COMPARATOR);
-			        
-					
-			        
-			        allMessage.clear();
-			        allMessage.addAll(sortedTasks);
-			        Collections.reverse(sortedTasks);
-			   		phoneNumber.clear();
-					
-//			   		for (SmsProxy s : sortedTasks) {
-//			   			GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
-//					}
-			   		
-					int i=0;
-					while (i < sortedTasks.size() && i<THREADS_NUMBER) { // o ci sono meno elementi da mostrare o ne mostro solo gli ultimi 4
-					
-						if(!phoneNumber.contains(allMessage.get(i).getPhoneNumber())){
+					ArrayList<SmsProxy> sortedTasks = new ArrayList<SmsProxy>(
+							response);
+					Collections.sort(sortedTasks, TASK_COMPARATOR);
+
+					allMessage.clear();
+					allMessage.addAll(sortedTasks);
+					Collections.reverse(sortedTasks);
+					phoneNumber.clear();
+
+					// for (SmsProxy s : sortedTasks) {
+					// 	GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
+					// }
+
+					int i = 0;
+					while (i < sortedTasks.size() && i < THREADS_NUMBER) { // ci
+																			// sono
+																			// meno
+																			// elementi
+																			// da
+																			// mostrare
+																			// o
+																			// ne
+																			// mostro
+																			// solo
+																			// gli
+																			// ultimi
+																			// 4
+						String number = purgePrefix(allMessage.get(i).getPhoneNumber());
+						if (!phoneNumber.contains(allMessage.get(i)
+								.getPhoneNumber())) {
 							phoneNumber.add(allMessage.get(i).getPhoneNumber());
+						//	GWT.log("Ho inserito il numero:"+allMessage.get(i).getPhoneNumber());
 						}
 						i++;
-					}			
+					}
 					constructForNumber();
-					
+
 					// SoundController soundController = new SoundController();
 					// @SuppressWarnings("deprecation")
 					// Sound sound = soundController.createSound(
 					// Sound.MIME_TYPE_AUDIO_MPEG,
 					// "bells-message.mp3");
 					// sound.play();
+				} else {
+					allMessage.clear();
+					phoneNumber.clear();
+					smsTableOne.clear();
+					smsTableTwo.clear();
+					smsTableThree.clear();
+					smsUserNumberOne.setText("");
+					smsUserNumberTwo.setText("");
+					smsUserNumberThree.setText("");
 				}
 			}
 		});
 	}
 
-	private void constructForNumber(){
+	private void constructForNumber() {
 		smsTableOne.clear();
 		smsTableTwo.clear();
 		smsTableThree.clear();
 		ThreadSmsReceived.get(0).clear();
 		ThreadSmsReceived.get(1).clear();
 		ThreadSmsReceived.get(2).clear();
-		
+
 		for (SmsProxy s : allMessage) {
-			if (phoneNumber.size()>0 &&s.getPhoneNumber().equals(phoneNumber.get(0))){
+			if (phoneNumber.size() > 0
+					&& s.getPhoneNumber().equals(phoneNumber.get(0))) {
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				smsTableOne.rebuild(s);
 			}
-			if(phoneNumber.size()>1 && s.getPhoneNumber().equals(phoneNumber.get(1))){
+			if (phoneNumber.size() > 1
+					&& s.getPhoneNumber().equals(phoneNumber.get(1))) {
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberTwo.setText(s.getPhoneNumber());
-				smsTableTwo.rebuild(s);		
-					
+				smsTableTwo.rebuild(s);
+
 			}
-			if(phoneNumber.size()>2 && s.getPhoneNumber().equals(phoneNumber.get(2))){
+			if (phoneNumber.size() > 2
+					&& s.getPhoneNumber().equals(phoneNumber.get(2))) {
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
 				smsTableThree.rebuild(s);
 			}
 		}
-		//TODO inserire il numero massimo di messaggi
-//		MESSAGES_NUMBER
- 	}
-	
-	private String purgePrefix(String num)
-	{
-		if(num.startsWith("+"))
-			return num;
+		// TODO inserire il numero massimo di messaggi
+		// MESSAGES_NUMBER
+	}
+
+	private String purgePrefix(String num) {
+		if (num.startsWith("+"))
+			return num.substring(3);//parto dalla seconda posizione, perchè potrei avere un +39 davanti al numero
 		return null;
 	}
-	
-	private boolean ValidatePhoneNumber(String phNumber)
-    {
-            String numPattern = "(\\d-)?(\\d{3}-)?\\d{3}-\\d{4}";
-            return phNumber.matches(numPattern);
-            
-//            Uses Example
-//            ValidatePhoneNumber("1-555-555-5555");
-//            ValidatePhoneNumber("1.555-555-5555");
-//            ValidatePhoneNumber("555-555-5555");
-//            ValidatePhoneNumber("555 555-5555");
-//            ValidatePhoneNumber("1 555 5555");
-//            ValidatePhoneNumber("555-WinNow");
-//            ValidatePhoneNumber("1-555-555");
-//            ValidatePhoneNumber("555-5555");
-            
-    }
+
+	private boolean ValidatePhoneNumber(String phNumber) {
+		String numPattern = "^\\d{3}[- ]?\\d{7}$"; // tre numeri per il prefisso
+													// e 7 per il numero,
+													// separati da - o spazio
+		return phNumber.matches(numPattern);
+	}
 
 	private void create() {
 		if (recipientNumber.getValue().isEmpty()
@@ -671,15 +686,21 @@ public class AllRightSMSWidget extends Composite {
 		smsProxy = request.edit(smsProxy);
 		smsProxy.setDueDate(new Date());
 		smsProxy.setEmailAddress("allrightsms@gmail.com"); // recipientArea.getValue()
-		smsProxy.setPhoneNumber(recipientNumber.getValue());
+		if (recipientNumber.getValue().contains("-"))
+			smsProxy.setPhoneNumber(recipientNumber.getValue().replace("-", ""));
+		else
+			if (recipientNumber.getValue().contains(" "))
+				smsProxy.setPhoneNumber(recipientNumber.getValue().replace(" ", ""));
+			else
+				smsProxy.setPhoneNumber(recipientNumber.getValue());
 		smsProxy.setTextmessage(messageArea.getValue());
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override
 			public void onSuccess(SmsProxy sms) {
 
-//				Window.alert("UPDATE SUCCESS:(" + sms.getId() + "): "
-//						+ sms.getPhoneNumber() + "\n messaggio: "
-//						+ sms.getTextmessage());
+				// Window.alert("UPDATE SUCCESS:(" + sms.getId() + "): "
+				// + sms.getPhoneNumber() + "\n messaggio: "
+				// + sms.getTextmessage());
 
 				setStatus("Sms Inviato Correttamente", false);
 			}
@@ -696,12 +717,12 @@ public class AllRightSMSWidget extends Composite {
 				.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(Void v) {
-//						Window.alert("DELETE SUCCESS");
+						// Window.alert("DELETE SUCCESS");
 					}
 
 					@Override
 					public void onFailure(ServerFailure error) {
-//						Window.alert("UNABLE TO DELETE");
+						// Window.alert("UNABLE TO DELETE");
 					}
 				});
 	}

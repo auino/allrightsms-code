@@ -70,7 +70,7 @@ public class DataStore {
 
 			case SENT_WEB: // request from web app, all the message
 				query = pm.newQuery("select from " + Sms.class.getName()
-						+ " where emailAddress=='" + getUserEmail() + "'");
+						+ " where emailAddress=='" + getUserEmail() + "'"); // order by id DESC or ASC
 				break;
 
 			default: // SENT_WEB_RECEIVED //request from web app only sms
