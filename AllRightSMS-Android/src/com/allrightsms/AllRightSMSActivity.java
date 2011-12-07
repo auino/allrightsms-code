@@ -25,11 +25,11 @@ import com.allrightsms.SmsApplication.SmsListener;
 import com.allrightsms.client.MyRequestFactory;
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
+import com.allrightsms.shared.NumberUtility;
 import com.allrightsms.shared.SmsChange;
 import com.allrightsms.shared.SmsProxy;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +58,6 @@ public class AllRightSMSActivity extends Activity {
 	private static final String TAG = "AllRightSMSActivity";
 	private AsyncFetchSMS asyncFetch;
 	private List<SmsProxy> newSms;
-	private SmsProxy smsProxy;
 
 	private String mex;
 	private String number;
@@ -128,11 +127,12 @@ public class AllRightSMSActivity extends Activity {
 					SmsProxy sms = request.create(SmsProxy.class);
 					sms.setDueDate(new Date());
 					sms.setEmailAddress("");
-					sms.setPhoneNumber(number);
+					sms.setPhoneNumber(NumberUtility.purgePrefix(number));
 					sms.setTextmessage(mex);
 					sms.setReceived(true);
-					sms.setSync(true);// importante per non farsi rimandare il
-										// C2DM
+					// importante per non farsi rimandare il C2DM
+					sms.setSync(true);
+					
 					request.updateSms(sms).fire();
 
 					return null;
