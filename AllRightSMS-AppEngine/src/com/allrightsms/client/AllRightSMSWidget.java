@@ -22,10 +22,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import sun.util.LocaleServiceProviderPool.LocalizedObjectGetter;
-
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
+import com.allrightsms.shared.NumberUtility;
 import com.allrightsms.shared.SmsProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -62,7 +61,7 @@ public class AllRightSMSWidget extends Composite {
 	private static final String STATUS_ERROR = "status error";
 	private static final String STATUS_NONE = "status none";
 	private static final String STATUS_SUCCESS = "status success";
-	private static final int DELAY_MS = 5000; // delay of research incoming, 1
+	private static final int DELAY_MS = 15000; // delay of research incoming, 1
 												// 000
 												// minute
 
@@ -184,7 +183,7 @@ public class AllRightSMSWidget extends Composite {
 	public static class SmsTableThree extends SmsTable {
 	}
 
-	public static class SmsTable extends HTML { // CellTable<SmsProxy>
+	public static class SmsTable extends HTML {
 
 		public SmsTable() {
 			super("");
@@ -195,13 +194,18 @@ public class AllRightSMSWidget extends Composite {
 		}
 
 		public void rebuild(SmsProxy s) {
-			// TODO controllo data, se < di un giorno OK, altrimenti la cambi in
-			// giorno e mese PredefinedFormat.DATE_SHORT
+			Date today = new Date(); // data corrente
 
+			double giorniFraDueDate = Math.round((today.getTime() - s
+					.getDueDate().getTime()) / 86400000.0);
 			// A custom date format
-			DateTimeFormat fmt = DateTimeFormat.getFormat("MMM dd"); // "EEEE, MMMM dd, yyyy"
-			// prints Monday, December 17, 2007 in the default locale
-			// GWT.log(fmt.format(s.getDueDate()), null);
+			DateTimeFormat fmt = null;
+
+			// se la differenza è maggiore di un giorno metto Mese e giorno
+			if (giorniFraDueDate >= 1)
+				fmt = DateTimeFormat.getFormat("MMM dd"); // "EEEE, MMMM dd, yyyy"
+			else
+				fmt = DateTimeFormat.getFormat("hh:mm aaa"); // Ora e minuti
 
 			if (s.getReceived())
 				addSms(false, "Name", s.getTextmessage(),
@@ -220,64 +224,11 @@ public class AllRightSMSWidget extends Composite {
 			String html = ""
 					+ "<div class=\"roundRect\" style=\"padding:3px; text-align:"
 					+ align + "; background-color:" + bg + ";\">" + "<div>"
-					+ "<b>" + from + ":</b> " + msg + "</div>" + "<div>" + date
-					+ "</div>" + "</div>";
+					+ "<b>" + from + ":</b> " + msg + "</div>"
+					+ "<div style=\"font-size:12px;\">" + date + "</div>"
+					+ "</div>";
 			this.setHTML(this.getHTML() + html);
 		}
-
-		/*
-		 * public Column<SmsProxy, String> messageColumn;
-		 * 
-		 * 
-		 * public SmsTable() { super("");
-		 * 
-		 * /* messageColumn = new Column<SmsProxy, String>(new TextCell()) {
-		 * 
-		 * @Override public String getValue(SmsProxy object) { return
-		 * object.getTextmessage(); } };
-		 */
-		// addColumn(messageColumn);
-
-		// addColumnStyleName(1, "columnFill");
-		// addColumnStyleName(1, resources.cellTableStyle().columnName());
-
-		/*
-		 * numberColumn = new Column<SmsProxy, String>(new TextCell()) {
-		 * 
-		 * @Override public String getValue(SmsProxy object) { return
-		 * object.getPhoneNumber(); } }; addColumn(numberColumn, "Number"); //
-		 * addColumnStyleName(2, resources.cellTableStyle().cellTableEvenRow());
-		 * 
-		 * PredefinedFormat dateFormat = PredefinedFormat.HOUR24_MINUTE; //
-		 * controllo data, se < di un giorno OK, altrimenti la cambi in giorno e
-		 * mese PredefinedFormat.DATE_SHORT dateColumn = new Column<SmsProxy,
-		 * Date>(new DateCell( //DatePickerCell - il DatePickerCell permette di
-		 * modificare la data DateTimeFormat.getFormat(dateFormat))) { //
-		 * MONTH_ABBR_DAY))) // {
-		 * 
-		 * @Override public Date getValue(SmsProxy s) { Date dueDate =
-		 * s.getDueDate(); return dueDate == null ? new Date() : dueDate; } };
-		 * addColumn(dateColumn, "Date");
-		 */
-		// addColumnStyleName(2, resources.cellTableStyle().columnDate());
-
-		// setColumnWidth(nameColumn, 65.0, Unit.PCT);
-
-		/*
-		 * ButtonCell buttonCell = new ButtonCell( new
-		 * SafeHtmlRenderer<String>() { public SafeHtml render(String object) {
-		 * return SafeHtmlUtils.fromTrustedString("Rispondi"); // <img //
-		 * src=\"reply.png\"></img> }
-		 * 
-		 * public void render(String object, SafeHtmlBuilder builder) {
-		 * builder.append(render(object)); } });
-		 * 
-		 * replyColumn = new Column<SmsProxy, String>(buttonCell) {
-		 * 
-		 * @Override public String getValue(SmsProxy object) { return "\u2717";
-		 * // Ballot "X" mark } }; addColumn(replyColumn, "\u2717");
-		 * addColumnStyleName(3, resources.cellTableStyle().columnTrash());
-		 */
 
 		/*
 		 * StackPanel (che è una figata) String text1 =
@@ -297,7 +248,6 @@ public class AllRightSMSWidget extends Composite {
 		 * 
 		 * }
 		 */
-
 	}
 
 	public AllRightSMSWidget() {
@@ -351,7 +301,8 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
-				if (ValidatePhoneNumber(recipientNumber.getValue()))
+				if (NumberUtility.ValidatePhoneNumber(recipientNumber
+						.getValue()))
 					create();
 				else
 					setStatus("Impossibile inviare il messaggio", false);
@@ -508,11 +459,6 @@ public class AllRightSMSWidget extends Composite {
 			return compareDueDate(t0, t1);
 		}
 
-		// boolean isDone(SmsProxy t) {
-		// Boolean done = t.isDone();
-		// return done != null && done;
-		// }
-
 		int compareDueDate(SmsProxy t0, SmsProxy t1) {
 			Date d0 = t0.getDueDate();
 			Date d1 = t1.getDueDate();
@@ -559,32 +505,22 @@ public class AllRightSMSWidget extends Composite {
 
 					allMessage.clear();
 					allMessage.addAll(sortedTasks);
-					Collections.reverse(sortedTasks);
+					// Collections.reverse(sortedTasks);
 					phoneNumber.clear();
 
 					// for (SmsProxy s : sortedTasks) {
-					// 	GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
+					// GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
 					// }
 
 					int i = 0;
-					while (i < sortedTasks.size() && i < THREADS_NUMBER) { // ci
-																			// sono
-																			// meno
-																			// elementi
-																			// da
-																			// mostrare
-																			// o
-																			// ne
-																			// mostro
-																			// solo
-																			// gli
-																			// ultimi
-																			// 4
-						String number = purgePrefix(allMessage.get(i).getPhoneNumber());
-						if (!phoneNumber.contains(allMessage.get(i)
-								.getPhoneNumber())) {
-							phoneNumber.add(allMessage.get(i).getPhoneNumber());
-						//	GWT.log("Ho inserito il numero:"+allMessage.get(i).getPhoneNumber());
+					while (i < sortedTasks.size() && i < THREADS_NUMBER) {
+						// ci sono meno elementi da mostrare o ne mostro solo
+						// gli ultimi 4
+						String number = NumberUtility.purgePrefix(allMessage
+								.get(i).getPhoneNumber());
+						// TODO utilizzare il numero senza +39
+						if (!phoneNumber.contains(number)) {
+							phoneNumber.add(number);
 						}
 						i++;
 					}
@@ -611,6 +547,7 @@ public class AllRightSMSWidget extends Composite {
 	}
 
 	private void constructForNumber() {
+		// ricostruisce al massimo un max MESSAGES_NUMBER per ogni thread
 		smsTableOne.clear();
 		smsTableTwo.clear();
 		smsTableThree.clear();
@@ -618,42 +555,34 @@ public class AllRightSMSWidget extends Composite {
 		ThreadSmsReceived.get(1).clear();
 		ThreadSmsReceived.get(2).clear();
 
+		int foundOne = 0, foundTwo = 0, foundThree = 0;
+
 		for (SmsProxy s : allMessage) {
 			if (phoneNumber.size() > 0
-					&& s.getPhoneNumber().equals(phoneNumber.get(0))) {
+					&& s.getPhoneNumber().equals(phoneNumber.get(0))
+					&& foundOne < MESSAGES_NUMBER) {
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				smsTableOne.rebuild(s);
+				foundOne++;
 			}
 			if (phoneNumber.size() > 1
-					&& s.getPhoneNumber().equals(phoneNumber.get(1))) {
+					&& s.getPhoneNumber().equals(phoneNumber.get(1))
+					&& foundTwo < MESSAGES_NUMBER) {
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberTwo.setText(s.getPhoneNumber());
 				smsTableTwo.rebuild(s);
-
+				foundTwo++;
 			}
 			if (phoneNumber.size() > 2
-					&& s.getPhoneNumber().equals(phoneNumber.get(2))) {
+					&& s.getPhoneNumber().equals(phoneNumber.get(2))
+					&& foundThree < MESSAGES_NUMBER) {
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
 				smsTableThree.rebuild(s);
+				foundThree++;
 			}
 		}
-		// TODO inserire il numero massimo di messaggi
-		// MESSAGES_NUMBER
-	}
-
-	private String purgePrefix(String num) {
-		if (num.startsWith("+"))
-			return num.substring(3);//parto dalla seconda posizione, perchè potrei avere un +39 davanti al numero
-		return null;
-	}
-
-	private boolean ValidatePhoneNumber(String phNumber) {
-		String numPattern = "^\\d{3}[- ]?\\d{7}$"; // tre numeri per il prefisso
-													// e 7 per il numero,
-													// separati da - o spazio
-		return phNumber.matches(numPattern);
 	}
 
 	private void create() {
@@ -686,13 +615,7 @@ public class AllRightSMSWidget extends Composite {
 		smsProxy = request.edit(smsProxy);
 		smsProxy.setDueDate(new Date());
 		smsProxy.setEmailAddress("allrightsms@gmail.com"); // recipientArea.getValue()
-		if (recipientNumber.getValue().contains("-"))
-			smsProxy.setPhoneNumber(recipientNumber.getValue().replace("-", ""));
-		else
-			if (recipientNumber.getValue().contains(" "))
-				smsProxy.setPhoneNumber(recipientNumber.getValue().replace(" ", ""));
-			else
-				smsProxy.setPhoneNumber(recipientNumber.getValue());
+		smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue()));
 		smsProxy.setTextmessage(messageArea.getValue());
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override
