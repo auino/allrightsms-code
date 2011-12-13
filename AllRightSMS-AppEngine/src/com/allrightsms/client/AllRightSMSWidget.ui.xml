@@ -1,6 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:t='urn:import:com.allrightsms.client'
-	xmlns:c='urn:import:com.google.gwt.cell.client' xmlns:d='urn:import:com.google.gwt.user.datepicker.client'>
+	xmlns:c='urn:import:com.google.gwt.cell.client' xmlns:d='urn:import:com.google.gwt.user.datepicker.client' xmlns:o="urn:import:com.sun.org.apache.xpath.internal.operations">
 	<g:HTMLPanel>
 		<div id="widget">
 			<div class="user" style="text-align:right; padding:3px; padding-right:10px;"> <!-- background-color:#f00; -->
@@ -9,8 +9,8 @@
 			</div>
 			<div id="header">
 				<div ui:field="status" class="status none"></div>
-				<p>Try out roundtripping data to App Engine.</p>
-				<g:Button ui:field="sayHelloButton">Say Hello</g:Button> 
+				<p>Test your connection to server.</p>
+				<g:Button ui:field="sayHelloButton">Test</g:Button> 
 				<br/><br/><a style="margin-left:100px; margin:15px; color:#fff; text-decoration:none;" href="http://allrightsms-code.googlecode.com/svn/trunk/AllRightSMS-Android/bin/AllRightSMS-Android.apk">Download APK-Alpha for Android</a>
 			</div>
 
@@ -30,86 +30,95 @@
 
 				</div>
 				
-				<p><h3>Received Message:</h3></p>
-				
-				<div class="roundRect" style="padding:10px;">  <!-- primo thread di messaggi -->
-					<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
-						<div style="display:table-cell; padding:3px; vertical-align:middle;">
-							<t:SmsUserPicture
-								ui:field="smsUserPictureOne" />
+				<div ui:field="messageStatus">
+					<p ><h3>Received Message:</h3></p>
+				</div>
+						
+				<div ui:field="headerOne" > <!-- primo thread di messaggi -->
+					<div class="roundRect" style="padding:10px;">  
+						<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
+							<div style="display:table-cell; padding:3px; vertical-align:middle;">
+								<t:SmsUserPicture
+									ui:field="smsUserPictureOne" />
+							</div>
+							<div style="display:table-cell; padding:3px; margin-right:0px;">
+								<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
+							  		<t:SmsUserName
+										ui:field="smsUserNameOne" />
+								</div>
+								<div style="vertical-align:middle; text-align:left; font-size:14px;">
+									<t:SmsUserNumber
+										ui:field="smsUserNumberOne" />
+								</div>
+							</div>
 						</div>
-						<div style="display:table-cell; padding:3px; margin-right:0px;">
-							<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
-						  		<t:SmsUserName
-									ui:field="smsUserNameOne" />
-							</div>
-							<div style="vertical-align:middle; text-align:left; font-size:14px;">
-								<t:SmsUserNumber
-									ui:field="smsUserNumberOne" />
-							</div>
+						<div class="smstable">
+							<t:AllRightSMSWidget.SmsTableOne
+								ui:field="smsTableOne" />
 						</div>
 					</div>
-					<div class="smstable">
-						<t:AllRightSMSWidget.SmsTableOne
-							ui:field="smsTableOne" />
+					<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
+						<g:Button ui:field="replyButtonOne">Reply</g:Button>
 					</div>
 				</div>
-				<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
-					<g:Button ui:field="replyButtonOne">Reply</g:Button>
-				</div>
-				
-				<div class="roundRect" style="padding:10px;"> <!-- secondo thread di messaggi -->
-					<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
-						<div style="display:table-cell; padding:3px; vertical-align:middle;">
-							<t:SmsUserPicture
-								ui:field="smsUserPictureTwo" />
-						</div>
-						<div style="display:table-cell; padding:3px; margin-right:0px;">
-							<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
-						  		<t:SmsUserName
-									ui:field="smsUserNameTwo" />
-							</div>
-							<div style="vertical-align:middle; text-align:left; font-size:14px;">
-								<t:SmsUserNumber
-									ui:field="smsUserNumberTwo" />
-							</div>
-						</div>
-					</div>					
 					
-					<div class="smstable">		
-						<t:AllRightSMSWidget.SmsTableTwo
-							ui:field="smsTableTwo" />
+				<div ui:field="headerTwo" > <!-- secondo thread di messaggi -->
+					<div class="roundRect" style="padding:10px;"> 
+						<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
+							<div style="display:table-cell; padding:3px; vertical-align:middle;">
+								<t:SmsUserPicture
+									ui:field="smsUserPictureTwo" />
+							</div>
+							<div style="display:table-cell; padding:3px; margin-right:0px;">
+								<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
+							  		<t:SmsUserName
+										ui:field="smsUserNameTwo" />
+								</div>
+								<div style="vertical-align:middle; text-align:left; font-size:14px;">
+									<t:SmsUserNumber
+										ui:field="smsUserNumberTwo" />
+								</div>
+							</div>
+						</div>					
+						
+						<div class="smstable">		
+							<t:AllRightSMSWidget.SmsTableTwo
+								ui:field="smsTableTwo" />
+						</div>
 					</div>
-				</div>
-				<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
-					<g:Button ui:field="replyButtonTwo">Reply</g:Button>
+					<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
+						<g:Button ui:field="replyButtonTwo">Reply</g:Button>
+					</div>
 				</div>
 				
-				<div class="roundRect" style="padding:10px;">  <!-- terzo thread di messaggi -->
-					<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
-						<div style="display:table-cell; padding:3px; vertical-align:middle;">
-							<t:SmsUserPicture
-								ui:field="smsUserPictureThree" />
+				<div ui:field="headerThree"> <!-- terzo thread di messaggi -->
+					<div class="roundRect" style="padding:10px;">  
+						<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
+							<div style="display:table-cell; padding:3px; vertical-align:middle;">
+								<t:SmsUserPicture
+									ui:field="smsUserPictureThree" />
+							</div>
+							<div style="display:table-cell; padding:3px; margin-right:0px;">
+								<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
+							  		<t:SmsUserName
+										ui:field="smsUserNameThree" />
+								</div>
+								<div style="vertical-align:middle; text-align:left; font-size:14px;">
+									<t:SmsUserNumber
+										ui:field="smsUserNumberThree" />
+								</div>
+							</div>
 						</div>
-						<div style="display:table-cell; padding:3px; margin-right:0px;">
-							<div style="vertical-align:middle; text-align:left; font-weight:bold; font-size:20px;">
-						  		<t:SmsUserName
-									ui:field="smsUserNameThree" />
-							</div>
-							<div style="vertical-align:middle; text-align:left; font-size:14px;">
-								<t:SmsUserNumber
-									ui:field="smsUserNumberThree" />
-							</div>
+						<div class="smstable">		
+							<t:AllRightSMSWidget.SmsTableThree
+								ui:field="smsTableThree" />
 						</div>
 					</div>
-					<div class="smstable">		
-						<t:AllRightSMSWidget.SmsTableThree
-							ui:field="smsTableThree" />
+					<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
+						<g:Button ui:field="replyButtonThree">Reply</g:Button>
 					</div>
 				</div>
-				<div style="margin:0 auto; padding:3px; margin-top:-5px; margin-bottom:60px; margin-right:0px;">
-					<g:Button ui:field="replyButtonThree">Reply</g:Button>
-				</div>
+			
 			</div>
 		</div>
 	</g:HTMLPanel>

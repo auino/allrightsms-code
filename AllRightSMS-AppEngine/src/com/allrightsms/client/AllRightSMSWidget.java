@@ -135,7 +135,19 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiField
 	SmsUserNumber smsUserNumberThree;
+	
+	@UiField
+	DivElement headerOne; //added to remove list sms header if no one...
+	
+	@UiField
+	DivElement headerTwo; //added to remove list sms header if no one...
+	
+	@UiField
+	DivElement headerThree; //added to remove list sms header if no one...
 
+	@UiField
+	DivElement messageStatus;
+	
 	@UiField
 	Button replyButtonOne;
 
@@ -208,10 +220,10 @@ public class AllRightSMSWidget extends Composite {
 				fmt = DateTimeFormat.getFormat("hh:mm aaa"); // Ora e minuti
 
 			if (s.getReceived())
-				addSms(false, "Name", s.getTextmessage(),
+				addSms(false, "Received", s.getTextmessage(),
 						fmt.format(s.getDueDate()));
 			else
-				addSms(true, "Me", s.getTextmessage(),
+				addSms(true, "Sent", s.getTextmessage(),
 						fmt.format(s.getDueDate()));
 		}
 
@@ -396,6 +408,13 @@ public class AllRightSMSWidget extends Composite {
 		queryUnreadButton.setText("Unread");
 		queryUnreadButton.getElement().setClassName(BUTTON_STYLE);
 		hp.add(queryUnreadButton);
+		
+		//gestione della visualizzazione dei div dei messaggi
+		headerOne.setAttribute("style", "display:none"); //display:block to visibility
+		headerTwo.setAttribute("style", "display:none"); 
+		headerThree.setAttribute("style", "display:none"); 
+		messageStatus.setInnerText("Waiting for  synchronization!");
+		//inizialmente nessun div viene mostrato
 
 		queryUnreadButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -439,6 +458,7 @@ public class AllRightSMSWidget extends Composite {
 			}
 		});
 
+		
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
 
@@ -518,7 +538,6 @@ public class AllRightSMSWidget extends Composite {
 						// gli ultimi 4
 						String number = NumberUtility.purgePrefix(allMessage
 								.get(i).getPhoneNumber());
-						// TODO utilizzare il numero senza +39
 						if (!phoneNumber.contains(number)) {
 							phoneNumber.add(number);
 						}
@@ -541,26 +560,33 @@ public class AllRightSMSWidget extends Composite {
 					smsUserNumberOne.setText("");
 					smsUserNumberTwo.setText("");
 					smsUserNumberThree.setText("");
+				//	smsTableOne.setVisible(false);
+					
+					headerOne.setAttribute("style", "display:none"); //display:block to visibility
+					headerTwo.setAttribute("style", "display:none"); 
+					headerThree.setAttribute("style", "display:none"); 
+					messageStatus.setInnerText("No message sent or received!");
 				}
 			}
 		});
 	}
 
 	private void constructForNumber() {
-		// ricostruisce al massimo un max MESSAGES_NUMBER per ogni thread
 		smsTableOne.clear();
 		smsTableTwo.clear();
 		smsTableThree.clear();
 		ThreadSmsReceived.get(0).clear();
 		ThreadSmsReceived.get(1).clear();
 		ThreadSmsReceived.get(2).clear();
+		messageStatus.setInnerText("Received Message:");
 
 		int foundOne = 0, foundTwo = 0, foundThree = 0;
-
+		
 		for (SmsProxy s : allMessage) {
 			if (phoneNumber.size() > 0
 					&& s.getPhoneNumber().equals(phoneNumber.get(0))
 					&& foundOne < MESSAGES_NUMBER) {
+				headerOne.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				smsTableOne.rebuild(s);
@@ -569,6 +595,7 @@ public class AllRightSMSWidget extends Composite {
 			if (phoneNumber.size() > 1
 					&& s.getPhoneNumber().equals(phoneNumber.get(1))
 					&& foundTwo < MESSAGES_NUMBER) {
+				headerTwo.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberTwo.setText(s.getPhoneNumber());
 				smsTableTwo.rebuild(s);
@@ -577,6 +604,7 @@ public class AllRightSMSWidget extends Composite {
 			if (phoneNumber.size() > 2
 					&& s.getPhoneNumber().equals(phoneNumber.get(2))
 					&& foundThree < MESSAGES_NUMBER) {
+				headerThree.setAttribute("style", "display:block"); 
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
 				smsTableThree.rebuild(s);
