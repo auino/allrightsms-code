@@ -383,31 +383,31 @@ public class AllRightSMSWidget extends Composite {
 		wrapper.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		wrapper.add(hp);
 
-		Button createButton = new Button();
-		createButton.setText("Create");
-		createButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(createButton);
-		Button updateButton = new Button();
-		updateButton.setText("Update");
-		updateButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(updateButton);
+//		Button createButton = new Button();
+//		createButton.setText("Create");
+//		createButton.getElement().setClassName(BUTTON_STYLE);
+	//	hp.add(createButton);
+//		Button updateButton = new Button();
+//		updateButton.setText("Update");
+//		updateButton.getElement().setClassName(BUTTON_STYLE);
+	//	hp.add(updateButton);
 		Button queryButton = new Button();
 		queryButton.setText("Query");
 		queryButton.getElement().setClassName(BUTTON_STYLE);
 		hp.add(queryButton);
-		Button deleteButton = new Button();
-		deleteButton.setText("Delete");
-		deleteButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(deleteButton);
+//		Button deleteButton = new Button();
+//		deleteButton.setText("Delete");
+//		deleteButton.getElement().setClassName(BUTTON_STYLE);
+	//	hp.add(deleteButton);
 		Button deleteAllButton = new Button();
 		deleteAllButton.setText("Delete All");
 		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
 		hp.add(deleteAllButton);
 
-		Button queryUnreadButton = new Button();
-		queryUnreadButton.setText("Unread");
-		queryUnreadButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(queryUnreadButton);
+//		Button queryUnreadButton = new Button();
+//		queryUnreadButton.setText("Unread");
+//		queryUnreadButton.getElement().setClassName(BUTTON_STYLE);
+	//	hp.add(queryUnreadButton);
 		
 		//gestione della visualizzazione dei div dei messaggi
 		headerOne.setAttribute("style", "display:none"); //display:block to visibility
@@ -416,33 +416,33 @@ public class AllRightSMSWidget extends Composite {
 		messageStatus.setInnerText("Waiting for  synchronization!");
 		//inizialmente nessun div viene mostrato
 
-		queryUnreadButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				queryUnread();
-			}
-		});
-
-		createButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				create();
-			}
-		});
-
-		updateButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				update(smsProxy);
-			}
-		});
-
-		deleteButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				delete(smsProxy);
-			}
-		});
+//		queryUnreadButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				queryUnread();
+//			}
+//		});
+//
+//		createButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				create();
+//			}
+//		});
+//
+//		updateButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				update(smsProxy);
+//			}
+//		});
+//
+//		deleteButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				delete(smsProxy);
+//			}
+//		});
 
 		deleteAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -457,7 +457,6 @@ public class AllRightSMSWidget extends Composite {
 				query();
 			}
 		});
-
 		
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
