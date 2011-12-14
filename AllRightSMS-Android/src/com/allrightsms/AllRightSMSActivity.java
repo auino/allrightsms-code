@@ -17,6 +17,9 @@ package com.allrightsms;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -38,6 +41,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +50,7 @@ import android.view.View.OnClickListener;
 
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Main activity - requests "Hello, World" messages from the server and provides
@@ -56,6 +61,9 @@ public class AllRightSMSActivity extends Activity {
 	 * Tag for logging.
 	 */
 	private static final String TAG = "AllRightSMSActivity";
+	private static final int TO_CONNECT = 1;
+	private static final int TO_DISCONNECT = 1;
+	private static final long STATUS_DELAY = 4000;
 	private AsyncFetchSMS asyncFetch;
 	private List<SmsProxy> newSms;
 
@@ -65,7 +73,7 @@ public class AllRightSMSActivity extends Activity {
 	 * The current context.
 	 */
 	private Context mContext = this;
-
+	
 	/**
 	 * A {@link BroadcastReceiver} to receive the response from a register or
 	 * unregister request, and to update the UI.
@@ -97,7 +105,7 @@ public class AllRightSMSActivity extends Activity {
 
 			// Display a notification
 			Util.generateNotification(mContext,
-					String.format(message, accountName), true);
+					String.format(message, accountName), false);
 		}
 	};
 
@@ -179,8 +187,6 @@ public class AllRightSMSActivity extends Activity {
 		});
 		// fine modifiche
 
-		// vecchio codice sotto
-
 		SharedPreferences prefs = Util.getSharedPreferences(mContext);
 		String connectionStatus = prefs.getString(Util.CONNECTION_STATUS,
 				Util.DISCONNECTED);
@@ -230,8 +236,7 @@ public class AllRightSMSActivity extends Activity {
 	}
 
 	// Manage UI Screens
-
-	private void setHelloWorldScreenContent() {
+/*	private void setHelloWorldScreenContent() {
 		setContentView(R.layout.hello_world);
 
 		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
@@ -277,7 +282,72 @@ public class AllRightSMSActivity extends Activity {
 			}
 		});
 	}
+*/
+	
+	private void setAllRightSmsScreen(){
+		setContentView(R.layout.hello_world);
 
+		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+		final Button testConnection = (Button) findViewById(R.id.say_hello);
+		
+		testConnection.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				testConnection.setEnabled(false);
+				helloWorld.setText(R.string.contacting_server);
+
+				// Use an AsyncTask to avoid blocking the UI thread
+				new AsyncTask<Void, Void, String>() {
+					private String message;
+
+					@Override
+					protected String doInBackground(Void... arg0) {
+
+						MyRequestFactory requestFactory = Util
+								.getRequestFactory(mContext,
+										MyRequestFactory.class);
+						final HelloWorldRequest request = requestFactory
+								.helloWorldRequest();
+						Log.i(TAG, "Sending request to server");
+						request.getMessage().fire(new Receiver<String>() {
+							@Override
+							public void onFailure(ServerFailure error) {
+								message = "Failure: " + error.getMessage();
+							}
+
+							@Override
+							public void onSuccess(String result) {
+								message = result;
+							}
+						});
+						return message;
+					}
+
+					@Override
+					protected void onPostExecute(String result) {
+						helloWorld.setText(result);	
+//						Timer t = new Timer();
+//						t.schedule(AllRightSMSActivity.this.t, 300, STATUS_DELAY);
+						testConnection.setEnabled(true);
+					}
+				}.execute();
+			}
+		});
+	}
+	
+//	private final TimerTask t = new TimerTask() {
+//		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+//		
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			helloWorld.setText(" ");
+//			Log.i(TAG, "Sticazzi come mai va il log e non il settext???");
+//		}
+//	};
+	
+	
+
+	
 	/**
 	 * Sets the screen content based on the screen id.
 	 */
@@ -285,14 +355,14 @@ public class AllRightSMSActivity extends Activity {
 		setContentView(screenId);
 		switch (screenId) {
 		case R.layout.hello_world:
-			setHelloWorldScreenContent();
+		//	setHelloWorldScreenContent();
+			setAllRightSmsScreen();
 			break;
 		}
 	}
 
 	// metodi per invio SMS
 	private void fetchSMS(long id) {
-		// TODO Auto-generated method stub
 		asyncFetch = new AsyncFetchSMS(this);
 		asyncFetch.execute(id);
 
@@ -317,36 +387,5 @@ public class AllRightSMSActivity extends Activity {
 					"Unable to send new SMS or No sms to send!", false);
 		}
 	}
-
-	// metodo per la ricezione di SMS
-//	public void receivedSms(SmsMessage[] smsMessage) {
-//		final String mex = smsMessage[0].getMessageBody().toString();
-//		new AsyncTask<Void, Void, Void>() {
-//
-//			@Override
-//			protected Void doInBackground(Void... arg0) {
-//
-//				MyRequestFactory requestFactory = Util.getRequestFactory(
-//						mContext, MyRequestFactory.class);
-//
-//				AllRightSMSRequest request = requestFactory
-//						.allRightSMSRequest();
-//
-//				smsProxy = request.edit(smsProxy);
-//				smsProxy.setDueDate(new Date());
-//				smsProxy.setEmailAddress("");
-//				smsProxy.setReceived(true);
-//				smsProxy.setRead(false);
-//				
-//				smsProxy.setPhoneNumber("boooo");
-//				smsProxy.setTextmessage(mex);
-//
-//				request.updateSms(smsProxy).fire();
-//
-//				return null;
-//			}
-//
-//		}.execute();
-//	}
 
 }
