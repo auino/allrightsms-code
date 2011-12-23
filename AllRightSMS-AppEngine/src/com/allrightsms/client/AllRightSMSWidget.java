@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.NumberUtility;
@@ -544,12 +546,12 @@ public class AllRightSMSWidget extends Composite {
 					}
 					constructForNumber();
 
-					// SoundController soundController = new SoundController();
-					// @SuppressWarnings("deprecation")
-					// Sound sound = soundController.createSound(
-					// Sound.MIME_TYPE_AUDIO_MPEG,
-					// "bells-message.mp3");
-					// sound.play();
+//					 soundcontroller soundcontroller = new soundcontroller();
+//					 @suppresswarnings("deprecation")
+//					 sound sound = soundcontroller.createsound(
+//					 sound.mime_type_audio_mpeg,
+//					 "bells-message.mp3");
+//					 sound.play();
 				} else {
 					allMessage.clear();
 					phoneNumber.clear();
@@ -640,7 +642,7 @@ public class AllRightSMSWidget extends Composite {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		smsProxy = request.edit(smsProxy);
-		smsProxy.setDueDate(new Date());
+	//	smsProxy.setDueDate(new Date()); già impostato sul server
 		smsProxy.setEmailAddress("allrightsms@gmail.com"); // recipientArea.getValue()
 		smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue()));
 		smsProxy.setTextmessage(messageArea.getValue());

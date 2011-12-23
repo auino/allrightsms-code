@@ -11,6 +11,9 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/>     -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>         -->
 
+	<!-- Inherit sound support -->
+  <inherits name='com.allen_sauer.gwt.voices.gwt-voices'/>
+
   <!-- Other module inherits                                          -->
   <inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
 

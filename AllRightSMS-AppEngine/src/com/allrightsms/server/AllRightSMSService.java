@@ -13,7 +13,10 @@ public class AllRightSMSService {
 
 	@ServiceMethod
 	public Sms createSms() {
-		return db.update(new Sms());
+		//TODO creare l'sms con già la data e l'ora in modo da averne una univoca... tipo il codice sotto
+		Sms s = new Sms();
+		s.setDueDate(new Date());
+		return db.update(s);
 	}
 
 	@ServiceMethod
@@ -24,6 +27,7 @@ public class AllRightSMSService {
 	@ServiceMethod
 	public Sms updateSms(Sms sms) {
 		sms.setEmailAddress(DataStore.getUserEmail());
+		sms.setDueDate(new Date());
 		sms = db.update(sms);
 		if (!sms.getSync())// se non è ancora stato inviato manda il C2DM, altrimenti no
 			DataStore.sendC2DMUpdate(SmsChange.NEWSMS + SmsChange.SEPARATOR
