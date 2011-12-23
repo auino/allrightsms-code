@@ -133,10 +133,11 @@ public class AllRightSMSActivity extends Activity {
 					AllRightSMSRequest request = requestFactory
 							.allRightSMSRequest();
 					SmsProxy sms = request.create(SmsProxy.class);
-					sms.setDueDate(new Date());
+					//sms.setDueDate(new Date()); //già creato dal server 
 					sms.setEmailAddress("");
 					sms.setPhoneNumber(NumberUtility.purgePrefix(number));
 					sms.setTextmessage(mex);
+					sms.setRead(false);
 					sms.setReceived(true);
 					// importante per non farsi rimandare il C2DM
 					sms.setSync(true);

@@ -5,6 +5,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.telephony.SmsManager;
@@ -20,9 +21,10 @@ public class SendSMS extends Activity {
 
 	public boolean Send(AllRightSMSActivity ctx, String phoneNumber,
 			String message, Date date) {
+		activity = ctx;
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
-
+		
 		PendingIntent sentPI = PendingIntent.getBroadcast(ctx, 0, new Intent(
 				SENT), 0);
 		PendingIntent deliveredPI = PendingIntent.getBroadcast(ctx, 0,
@@ -30,7 +32,8 @@ public class SendSMS extends Activity {
 
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-		registerToDevice(phoneNumber, message, date);
+		
+//		registerToDevice(phoneNumber, message, date);
 
 		return true;
 	}
@@ -54,7 +57,8 @@ public class SendSMS extends Activity {
 		values.put(STATUS, -1);
 		values.put(TYPE, 2);
 		values.put(BODY, text);
-		Uri inserted = getContentResolver().insert(Uri.parse("content://sms"),
+		
+		Uri inserted = activity.getContentResolver().insert(Uri.parse("content://sms"),
 				values);
 	}
 
