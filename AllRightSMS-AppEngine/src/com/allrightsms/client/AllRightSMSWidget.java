@@ -22,8 +22,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.allen_sauer.gwt.voices.client.Sound;
-import com.allen_sauer.gwt.voices.client.SoundController;
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.NumberUtility;
@@ -54,6 +52,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 
 public class AllRightSMSWidget extends Composite {
 
@@ -137,19 +137,19 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiField
 	SmsUserNumber smsUserNumberThree;
-	
+
 	@UiField
-	DivElement headerOne; //added to remove list sms header if no one...
-	
+	DivElement headerOne; // added to remove list sms header if no one...
+
 	@UiField
-	DivElement headerTwo; //added to remove list sms header if no one...
-	
+	DivElement headerTwo; // added to remove list sms header if no one...
+
 	@UiField
-	DivElement headerThree; //added to remove list sms header if no one...
+	DivElement headerThree; // added to remove list sms header if no one...
 
 	@UiField
 	DivElement messageStatus;
-	
+
 	@UiField
 	Button replyButtonOne;
 
@@ -266,6 +266,7 @@ public class AllRightSMSWidget extends Composite {
 
 	public AllRightSMSWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
+
 		sayHelloButton.getElement().setClassName("send centerbtn");
 		sendMessageButton.getElement().setClassName("send");
 		replyButtonOne.getElement().setClassName("send");
@@ -275,15 +276,15 @@ public class AllRightSMSWidget extends Composite {
 		// inizializzo il bus per le chiamate al server
 		RequestFactory.initialize(eventBus);
 
-		logout.setText("Logout");
-		logout.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				// TODO
-				Window.alert("Logout???");
-			}
-		});
+		// logout.setText("Logout");
+		// logout.addClickHandler(new ClickHandler() {
+		//
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// // TODO
+		// Window.alert("Logout???");
+		// }
+		// });
 
 		// inizializzo le tre liste di messaggi
 		ThreadSmsReceived.add(0, new LinkedList<SmsProxy>());
@@ -385,66 +386,67 @@ public class AllRightSMSWidget extends Composite {
 		wrapper.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		wrapper.add(hp);
 
-//		Button createButton = new Button();
-//		createButton.setText("Create");
-//		createButton.getElement().setClassName(BUTTON_STYLE);
-	//	hp.add(createButton);
-//		Button updateButton = new Button();
-//		updateButton.setText("Update");
-//		updateButton.getElement().setClassName(BUTTON_STYLE);
-	//	hp.add(updateButton);
+		// Button createButton = new Button();
+		// createButton.setText("Create");
+		// createButton.getElement().setClassName(BUTTON_STYLE);
+		// hp.add(createButton);
+		// Button updateButton = new Button();
+		// updateButton.setText("Update");
+		// updateButton.getElement().setClassName(BUTTON_STYLE);
+		// hp.add(updateButton);
 		Button queryButton = new Button();
 		queryButton.setText("Query");
 		queryButton.getElement().setClassName(BUTTON_STYLE);
 		hp.add(queryButton);
-//		Button deleteButton = new Button();
-//		deleteButton.setText("Delete");
-//		deleteButton.getElement().setClassName(BUTTON_STYLE);
-	//	hp.add(deleteButton);
+		// Button deleteButton = new Button();
+		// deleteButton.setText("Delete");
+		// deleteButton.getElement().setClassName(BUTTON_STYLE);
+		// hp.add(deleteButton);
 		Button deleteAllButton = new Button();
 		deleteAllButton.setText("Delete All");
 		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
 		hp.add(deleteAllButton);
 
-//		Button queryUnreadButton = new Button();
-//		queryUnreadButton.setText("Unread");
-//		queryUnreadButton.getElement().setClassName(BUTTON_STYLE);
-	//	hp.add(queryUnreadButton);
-		
-		//gestione della visualizzazione dei div dei messaggi
-		headerOne.setAttribute("style", "display:none"); //display:block to visibility
-		headerTwo.setAttribute("style", "display:none"); 
-		headerThree.setAttribute("style", "display:none"); 
-		messageStatus.setInnerText("Waiting for  synchronization!");
-		//inizialmente nessun div viene mostrato
+		// Button queryUnreadButton = new Button();
+		// queryUnreadButton.setText("Unread");
+		// queryUnreadButton.getElement().setClassName(BUTTON_STYLE);
+		// hp.add(queryUnreadButton);
 
-//		queryUnreadButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				queryUnread();
-//			}
-//		});
-//
-//		createButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				create();
-//			}
-//		});
-//
-//		updateButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				update(smsProxy);
-//			}
-//		});
-//
-//		deleteButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				delete(smsProxy);
-//			}
-//		});
+		// gestione della visualizzazione dei div dei messaggi
+		headerOne.setAttribute("style", "display:none"); // display:block to
+															// visibility
+		headerTwo.setAttribute("style", "display:none");
+		headerThree.setAttribute("style", "display:none");
+		messageStatus.setInnerText("Waiting for  synchronization!");
+		// inizialmente nessun div viene mostrato
+
+		// queryUnreadButton.addClickHandler(new ClickHandler() {
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// queryUnread();
+		// }
+		// });
+		//
+		// createButton.addClickHandler(new ClickHandler() {
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// create();
+		// }
+		// });
+		//
+		// updateButton.addClickHandler(new ClickHandler() {
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// update(smsProxy);
+		// }
+		// });
+		//
+		// deleteButton.addClickHandler(new ClickHandler() {
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// delete(smsProxy);
+		// }
+		// });
 
 		deleteAllButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -459,7 +461,7 @@ public class AllRightSMSWidget extends Composite {
 				query();
 			}
 		});
-		
+
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
 
@@ -523,35 +525,45 @@ public class AllRightSMSWidget extends Composite {
 					ArrayList<SmsProxy> sortedTasks = new ArrayList<SmsProxy>(
 							response);
 					Collections.sort(sortedTasks, TASK_COMPARATOR);
+					//se ci sono nuovi messaggi...
+					if (!sortedTasks.equals(allMessage)) {
+						allMessage.clear();
+						allMessage.addAll(sortedTasks);
+						// Collections.reverse(sortedTasks);
+						phoneNumber.clear();
 
-					allMessage.clear();
-					allMessage.addAll(sortedTasks);
-					// Collections.reverse(sortedTasks);
-					phoneNumber.clear();
+						// for (SmsProxy s : sortedTasks) {
+						// GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
+						// }
 
-					// for (SmsProxy s : sortedTasks) {
-					// GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
-					// }
-
-					int i = 0;
-					while (i < sortedTasks.size() && i < THREADS_NUMBER) {
-						// ci sono meno elementi da mostrare o ne mostro solo
-						// gli ultimi 4
-						String number = NumberUtility.purgePrefix(allMessage
-								.get(i).getPhoneNumber());
-						if (!phoneNumber.contains(number)) {
-							phoneNumber.add(number);
+						int i = 0;
+						while (i < sortedTasks.size() && i < THREADS_NUMBER) {
+							// ci sono meno elementi da mostrare o ne mostro
+							// solo
+							// gli ultimi 4
+							String number = NumberUtility
+									.purgePrefix(allMessage.get(i)
+											.getPhoneNumber());
+							if (!phoneNumber.contains(number)) {
+								phoneNumber.add(number);
+							}
+							i++;
 						}
-						i++;
-					}
-					constructForNumber();
+						constructForNumber();
 
-//					 soundcontroller soundcontroller = new soundcontroller();
-//					 @suppresswarnings("deprecation")
-//					 sound sound = soundcontroller.createsound(
-//					 sound.mime_type_audio_mpeg,
-//					 "bells-message.mp3");
-//					 sound.play();
+						// emette un suono per segnalare messaggio in arrivo!
+						SoundController soundController = new SoundController();
+						Sound sound = soundController.createSound(
+								Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+								"bells-message.mp3");
+						// MIME_TYPE_AUDIO_MPEG
+						sound.play();
+					}
+					
+					// check for notifications support
+					// you can omit the 'window' keyword
+									
+					
 				} else {
 					allMessage.clear();
 					phoneNumber.clear();
@@ -561,11 +573,12 @@ public class AllRightSMSWidget extends Composite {
 					smsUserNumberOne.setText("");
 					smsUserNumberTwo.setText("");
 					smsUserNumberThree.setText("");
-				//	smsTableOne.setVisible(false);
-					
-					headerOne.setAttribute("style", "display:none"); //display:block to visibility
-					headerTwo.setAttribute("style", "display:none"); 
-					headerThree.setAttribute("style", "display:none"); 
+
+					headerOne.setAttribute("style", "display:none"); // display:block
+																		// to
+																		// visibility
+					headerTwo.setAttribute("style", "display:none");
+					headerThree.setAttribute("style", "display:none");
 					messageStatus.setInnerText("No message sent or received!");
 				}
 			}
@@ -582,7 +595,7 @@ public class AllRightSMSWidget extends Composite {
 		messageStatus.setInnerText("Received Message:");
 
 		int foundOne = 0, foundTwo = 0, foundThree = 0;
-		
+
 		for (SmsProxy s : allMessage) {
 			if (phoneNumber.size() > 0
 					&& s.getPhoneNumber().equals(phoneNumber.get(0))
@@ -605,7 +618,7 @@ public class AllRightSMSWidget extends Composite {
 			if (phoneNumber.size() > 2
 					&& s.getPhoneNumber().equals(phoneNumber.get(2))
 					&& foundThree < MESSAGES_NUMBER) {
-				headerThree.setAttribute("style", "display:block"); 
+				headerThree.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
 				smsTableThree.rebuild(s);
@@ -642,9 +655,10 @@ public class AllRightSMSWidget extends Composite {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		smsProxy = request.edit(smsProxy);
-	//	smsProxy.setDueDate(new Date()); già impostato sul server
+		// smsProxy.setDueDate(new Date()); già impostato sul server
 		smsProxy.setEmailAddress("allrightsms@gmail.com"); // recipientArea.getValue()
-		smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue()));
+		smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber
+				.getValue()));
 		smsProxy.setTextmessage(messageArea.getValue());
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override
@@ -664,21 +678,6 @@ public class AllRightSMSWidget extends Composite {
 		});
 	}
 
-	private void delete(SmsProxy smsProxy) {
-		RequestFactory.allRightSMSRequest().deleteSms(smsProxy)
-				.fire(new Receiver<Void>() {
-					@Override
-					public void onSuccess(Void v) {
-						// Window.alert("DELETE SUCCESS");
-					}
-
-					@Override
-					public void onFailure(ServerFailure error) {
-						// Window.alert("UNABLE TO DELETE");
-					}
-				});
-	}
-
 	private void query() {
 		RequestFactory.allRightSMSRequest().querySms()
 				.fire(new Receiver<List<SmsProxy>>() {
@@ -693,26 +692,6 @@ public class AllRightSMSWidget extends Composite {
 									+ sms.getSync() + " received="
 									+ sms.getReceived() + " read="
 									+ sms.getRead() + "\n";
-						}
-						Window.alert("QUERY SUCCESS: Count[" + smsList.size()
-								+ "] Values:" + names);
-					}
-				});
-	}
-
-	private void queryUnread() {
-		RequestFactory.allRightSMSRequest().queryUnReadSms()
-				.fire(new Receiver<List<SmsProxy>>() {
-					@Override
-					public void onSuccess(List<SmsProxy> smsList) {
-						String names = "\n";
-						for (SmsProxy sms : smsList) {
-							names += " (" + sms.getId() + "): "
-									+ sms.getEmailAddress() + "\n" + "Number: "
-									+ sms.getPhoneNumber() + " Text: "
-									+ sms.getTextmessage() + "\n sync="
-									+ sms.getSync() + " received="
-									+ sms.getReceived() + "\n";
 						}
 						Window.alert("QUERY SUCCESS: Count[" + smsList.size()
 								+ "] Values:" + names);

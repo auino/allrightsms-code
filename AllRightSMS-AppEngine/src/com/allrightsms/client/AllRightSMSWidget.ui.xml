@@ -5,7 +5,7 @@
 		<div id="widget">
 			<div class="user" style="text-align:right; padding:3px; padding-right:10px;"> <!-- background-color:#f00; -->
 				<g:Label ui:field="signin" />
-				<g:Label ui:field="logout" />
+				<g:Label ui:field="logout" /> 
 			</div>
 			<div id="header">
 				<div ui:field="status" class="status none"></div>
