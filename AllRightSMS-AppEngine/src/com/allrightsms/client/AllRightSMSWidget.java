@@ -540,14 +540,14 @@ public class AllRightSMSWidget extends Composite {
 						while (i < sortedTasks.size() && i < THREADS_NUMBER) {
 							// ci sono meno elementi da mostrare o ne mostro
 							// solo
-							// gli ultimi 4
+							// gli ultimi 3
 							String number = NumberUtility
 									.purgePrefix(allMessage.get(i)
 											.getPhoneNumber());
 							if (!phoneNumber.contains(number)) {
 								phoneNumber.add(number);
+								i++;
 							}
-							i++;
 						}
 						constructForNumber();
 
