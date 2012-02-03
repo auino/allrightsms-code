@@ -30,10 +30,16 @@ public class SendSMS extends Activity {
 		PendingIntent deliveredPI = PendingIntent.getBroadcast(ctx, 0,
 				new Intent(DELIVERED), 0);
 
-		SmsManager sms = SmsManager.getDefault();
-		sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+		try {
+			SmsManager sms = SmsManager.getDefault();
+			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 		
-//		registerToDevice(phoneNumber, message, date);
+//		registerToDevice(phoneNumber, message, date); //dovrebbe servire per registrare il messaggio anche sul cell
 
 		return true;
 	}
