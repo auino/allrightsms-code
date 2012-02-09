@@ -45,7 +45,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -74,6 +73,7 @@ public class AllRightSMSWidget extends Composite {
 	private final List<List<SmsProxy>> ThreadSmsReceived = new LinkedList<List<SmsProxy>>();
 	private final List<SmsProxy> allMessage = new LinkedList<SmsProxy>();
 	private final List<String> phoneNumber = new LinkedList<String>();
+	private String LoggedMail = "";
 
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
@@ -85,13 +85,10 @@ public class AllRightSMSWidget extends Composite {
 	TextAreaElement messageArea;
 
 	@UiField
-	Label signin;
+	DivElement signout;
 
 	@UiField
-	Label logout;
-
-	@UiField
-	InputElement recipientNumber;
+	InputElement recipientNumber; 
 
 	@UiField
 	DivElement status;
@@ -167,7 +164,6 @@ public class AllRightSMSWidget extends Composite {
 		public void run() {
 			status.setInnerText("");
 			status.setClassName(STATUS_NONE);
-			// recipientArea.setValue("");
 			messageArea.setValue("");
 			recipientNumber.setValue("");
 		}
@@ -244,6 +240,8 @@ public class AllRightSMSWidget extends Composite {
 			this.setHTML(this.getHTML() + html);
 		}
 
+	
+		
 		/*
 		 * StackPanel (che è una figata) String text1 =
 		 * "Lorem ipsum dolor sit amet..."; String text2 =
@@ -262,7 +260,7 @@ public class AllRightSMSWidget extends Composite {
 		 * 
 		 * }
 		 */
-	}
+	}	
 
 	public AllRightSMSWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -275,16 +273,18 @@ public class AllRightSMSWidget extends Composite {
 
 		// inizializzo il bus per le chiamate al server
 		RequestFactory.initialize(eventBus);
+		
+		//inserire la request che mi da la mail dell'utente	e se possibile l'url di logout
+		HelloWorldRequest helloWorldRequest = RequestFactory.helloWorldRequest();
+			helloWorldRequest.getMail().fire(new Receiver<String>() {
 
-		// logout.setText("Logout");
-		// logout.addClickHandler(new ClickHandler() {
-		//
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// // TODO
-		// Window.alert("Logout???");
-		// }
-		// });
+				@Override
+				public void onSuccess(String response) {
+					// TODO Auto-generated method stub
+					LoggedMail = response;
+					signout.setInnerHTML(response);
+				}
+		});	
 
 		// inizializzo le tre liste di messaggi
 		ThreadSmsReceived.add(0, new LinkedList<SmsProxy>());

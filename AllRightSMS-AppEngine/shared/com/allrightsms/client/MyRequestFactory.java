@@ -32,6 +32,8 @@ public interface MyRequestFactory extends RequestFactory {
 		 * Retrieve a "Hello, World" message from the server.
 		 */
 		Request<String> getMessage();
+		
+		Request<String> getMail();
 	}
 
 	@ServiceName("com.allrightsms.server.RegistrationInfo")
@@ -53,6 +55,13 @@ public interface MyRequestFactory extends RequestFactory {
 		 * Send a message to a device using C2DM.
 		 */
 		InstanceRequest<MessageProxy, String> send();
+	}
+	
+	public interface ContactsRequest extends RequestContext {
+		/**
+		 * request for contacts data
+		 */
+		//getContacts<MessageProxy, String> send();
 	}
 
 	HelloWorldRequest helloWorldRequest();

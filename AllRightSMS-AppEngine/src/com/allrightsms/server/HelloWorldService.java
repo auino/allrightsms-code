@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gdata.client.contacts.ContactsService;
 
 public class HelloWorldService {
 
@@ -41,4 +42,26 @@ public class HelloWorldService {
     log.info("Returning message \"" + message + "\"");
     return message;
   }
+  
+  public static String getMail()
+  {
+	  UserService userService = UserServiceFactory.getUserService();
+	  User user = userService.getCurrentUser();
+	  
+	  String thisURL = "allrightsms.appspot.com";
+	  String retval = "allrightsms.appspot.com";
+		
+		if (user != null) {
+			retval += "<p>Hello, " + user.getEmail()
+							+ "!  You can <a href=\""
+							+ userService.createLogoutURL(thisURL)
+							+ "\">sign out</a>.</p>";
+		} else {
+			retval += "<p>Please <a href=\""
+							+ userService.createLoginURL("")
+							+ "\">sign in</a>.</p>";
+		}
+	  
+	  return retval;
+  }  
 }

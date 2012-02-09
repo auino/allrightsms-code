@@ -23,7 +23,6 @@
   </welcome-file-list>
 
   <!-- RequestFactory Servlet -->
-
   <servlet>
     <servlet-name>requestFactoryServlet</servlet-name>
     <servlet-class>com.google.web.bindery.requestfactory.server.RequestFactoryServlet</servlet-class>
@@ -54,17 +53,30 @@
       <url-pattern>/tasks/c2dm</url-pattern>
   </servlet-mapping>
 
+<!--  potrei inserire il servlet per fare l'autenticazione o logout! -->
+	<!-- inserito in data 08/02/2012 per LogIn- LogOut -->
+    	<servlet>
+        <servlet-name>testloguser</servlet-name>
+        <servlet-class>com.allrightsms.server.TestLoginUser</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>testloguser</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping> 
+
+
   <!-- Security -->
 
   <!--  Require user login for the .html welcome page -->
-  <security-constraint>
+    <security-constraint>
     <web-resource-collection>
-      <url-pattern>/*</url-pattern> <!--/AllRightSMS.html -->
-    </web-resource-collection>
-    <auth-constraint>
+      <url-pattern>/*</url-pattern> 
+      </web-resource-collection>
+     <auth-constraint>
       <role-name>*</role-name>
-    </auth-constraint>
+    </auth-constraint> 
   </security-constraint>
+
 
   <!--  Require admin role for the tasks servlet -->
   <security-constraint>

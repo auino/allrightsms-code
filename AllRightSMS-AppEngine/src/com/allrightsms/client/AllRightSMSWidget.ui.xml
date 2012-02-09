@@ -3,15 +3,15 @@
 	xmlns:c='urn:import:com.google.gwt.cell.client' xmlns:d='urn:import:com.google.gwt.user.datepicker.client' xmlns:o="urn:import:com.sun.org.apache.xpath.internal.operations">
 	<g:HTMLPanel>
 		<div id="widget">
-			<div class="user" style="text-align:right; padding:3px; padding-right:10px;"> <!-- background-color:#f00; -->
-				<g:Label ui:field="signin" />
-				<g:Label ui:field="logout" /> 
+			<div class="user"  style="text-align:right; margin-left:300px; padding:3px; padding-right:10px; ackground-color:#f00;"> <!-- background-color:#f00; -->
+				<div ui:field="signout"></div>
 			</div>
 			<div id="header">
 				<div ui:field="status" class="status none"></div>
 				<p>Test your connection to server.</p>
 				<g:Button ui:field="sayHelloButton">Test</g:Button> 
-				<br/><br/><a style="margin-left:100px; margin:15px; color:#fff; text-decoration:none;" href="http://allrightsms-code.googlecode.com/svn/trunk/AllRightSMS-Android/bin/AllRightSMS-Android.apk">Download APK-Alpha for Android</a>
+				<br/><br/>
+				<a style="margin-left:100px; margin:15px; color:#fff; text-decoration:none;" href="http://allrightsms-code.googlecode.com/svn/trunk/AllRightSMS-Android/bin/AllRightSMS-Android.apk">Download APK-Alpha for Android</a>
 			</div>
 
 			<div id="message">
@@ -22,7 +22,7 @@
 				<div class="roundRect" style="margin-bottom:60px;">
 
 					<input ui:field="recipientNumber" type="text" class="field"
-						size="62" placeholder="Cell number" />
+						size="62" placeholder="Cell number" />  
 					<textarea ui:field="messageArea" cols="46" rows="3"
 						placeholder="Message" />
 
