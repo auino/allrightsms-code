@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gdata.client.contacts.ContactsService;
 
 public class HelloWorldService {
 
