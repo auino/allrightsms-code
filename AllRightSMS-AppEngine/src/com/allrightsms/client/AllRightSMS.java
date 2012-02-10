@@ -28,7 +28,7 @@ public class AllRightSMS implements EntryPoint {
    * This is the entry point method.
    */
   @Override
-public void onModuleLoad() {
+  public void onModuleLoad() {
     //AllRightSMSWidget widget = new AllRightSMSWidget();
     RootPanel.get().add(new AllRightSMSWidget());
   }

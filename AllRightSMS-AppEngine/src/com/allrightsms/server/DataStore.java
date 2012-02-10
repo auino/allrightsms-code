@@ -127,7 +127,7 @@ public class DataStore {
 		item.setEmailAddress(getUserEmail());
 		if (item.getDueDate() == null) {
 			Calendar c = Calendar.getInstance();
-			c.set(2011, 5, 11);
+			//c.set(2011, 5, 11);
 			item.setDueDate(c.getTime());
 		}
 		PersistenceManager pm = PMF.get().getPersistenceManager();

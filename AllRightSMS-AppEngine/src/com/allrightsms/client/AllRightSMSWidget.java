@@ -280,7 +280,6 @@ public class AllRightSMSWidget extends Composite {
 
 				@Override
 				public void onSuccess(String response) {
-					// TODO Auto-generated method stub
 					LoggedMail = response;
 					signout.setInnerHTML(response);
 				}

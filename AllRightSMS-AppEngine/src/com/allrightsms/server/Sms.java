@@ -14,6 +14,7 @@ public class Sms {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String name;
 	private Date dueDate;
 	private String emailAddress;
 	private String userId;
@@ -29,6 +30,14 @@ public class Sms {
 	public Sms() {
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public Date getDueDate() {
 		return dueDate;
 	}

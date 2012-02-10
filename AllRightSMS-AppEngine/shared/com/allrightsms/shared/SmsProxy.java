@@ -8,6 +8,10 @@ import com.google.web.bindery.requestfactory.shared.ValueProxy;
 @ProxyForName(value = "com.allrightsms.server.Sms", locator = "com.allrightsms.server.SmsLocator")
 public interface SmsProxy extends ValueProxy {
 
+	String getName();
+
+	void setName(String name);
+	
 	Date getDueDate();
 
 	void setDueDate(Date dueDate);
