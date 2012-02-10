@@ -32,8 +32,7 @@ public class SendSMS extends Activity {
 
 		try {
 			SmsManager sms = SmsManager.getDefault();
-			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-			
+			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);			
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;

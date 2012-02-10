@@ -38,8 +38,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.Contacts.People;
 import android.telephony.SmsMessage;
 import android.text.format.Time;
 import android.util.Log;
@@ -110,11 +114,12 @@ public class AllRightSMSActivity extends Activity {
 	};
 
 	private final BroadcastReceiver smsReceiver = new BroadcastReceiver() {
-
+		
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle bundle = intent.getExtras();
-
+			final ManageContacts addContacts = new ManageContacts();
+			
 			Object messages[] = (Object[]) bundle.get("pdus");
 			SmsMessage smsMessage[] = new SmsMessage[messages.length];
 			for (int n = 0; n < messages.length; n++) {
@@ -139,6 +144,9 @@ public class AllRightSMSActivity extends Activity {
 					sms.setTextmessage(mex);
 					sms.setRead(false);
 					sms.setReceived(true);
+					
+					sms.setName(addContacts.retrieveName(mContext, number));
+					
 					// importante per non farsi rimandare il C2DM
 					sms.setSync(true);
 
@@ -159,7 +167,7 @@ public class AllRightSMSActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
-
+		
 		// Register a receiver to provide register/unregister notifications
 		registerReceiver(mUpdateUIReceiver, new IntentFilter(
 				Util.UPDATE_UI_INTENT));
@@ -195,7 +203,7 @@ public class AllRightSMSActivity extends Activity {
 
 			startActivity(new Intent(this, AccountsActivity.class));
 		}
-
+		
 		setScreenContent(R.layout.hello_world);
 	}
 
@@ -317,6 +325,11 @@ public class AllRightSMSActivity extends Activity {
 				}.execute();
 			}
 		});
+		
+		
+		//startActivity(new Intent(this, AccountsActivity.class));
+		
+	//	startActivityForResult(new Intent(this,ManageContacts.class), 0);
 	}
 
 	// private final TimerTask t = new TimerTask() {
@@ -347,14 +360,15 @@ public class AllRightSMSActivity extends Activity {
 	private void fetchSMS(long id) {
 		asyncFetch = new AsyncFetchSMS(this);
 		asyncFetch.execute(id);
-
 	}
 
 	public void sendSMS(List<SmsProxy> sms2send) {
 		// code to send SMS here
 		if (!sms2send.isEmpty()) {
 			SendSMS sendsms = new SendSMS();
+			ManageContacts addContacts = new ManageContacts();
 			boolean success = false;
+			boolean successupdate = false;
 			// SMSs to send!
 			newSms = sms2send;
 			int size = newSms.size();
@@ -375,14 +389,15 @@ public class AllRightSMSActivity extends Activity {
 					// Log.i(TAG, "Unico Messaggio");
 					success = sendsms.Send(this, sms.getPhoneNumber(),
 							sms.getTextmessage(), sms.getDueDate());// ritorna
-																	// un
-																	// booleano
-
+																	// un booleano
+					//aggiunto in data 10/02/2012
+			//		successupdate = addContacts.addNameToSms(this, sms);										
 				}
 			}
-			if (success)
+			if (success){
 				Util.generateNotification(mContext, "New SMS sent correctly!",
 						false);
+			}	
 			else
 				Util.generateNotification(mContext,
 						"New SMS Not sent correctly!", false);
@@ -392,5 +407,15 @@ public class AllRightSMSActivity extends Activity {
 					"Unable to send new SMS or No sms to send!", false);
 		}
 	}
-
+	
+	private void updateSms(SmsProxy sms)
+	{
+		ManageContacts addContacts = new ManageContacts();
+		MyRequestFactory requestFactory = Util.getRequestFactory(mContext, MyRequestFactory.class);
+		AllRightSMSRequest request = requestFactory.allRightSMSRequest();
+	
+		sms.setName(addContacts.retrieveName(mContext, number));
+		request.updateSms(sms).fire();
+		
+	}
 }

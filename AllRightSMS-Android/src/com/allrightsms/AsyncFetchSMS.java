@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 
 import com.allrightsms.client.MyRequestFactory;
 import com.allrightsms.shared.AllRightSMSRequest;
-import com.allrightsms.shared.RequestSource;
-import com.allrightsms.shared.SmsChange;
 import com.allrightsms.shared.SmsProxy;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -32,14 +30,7 @@ public class AsyncFetchSMS extends AsyncTask<Long, Void, List<SmsProxy>> {
 
 		Long id = arguments[0];
 		request.readSms(id).fire(new Receiver<SmsProxy>() {
-			// request.queryUnSentSms().fire(new Receiver<List<SmsProxy>>() {
-
-			/*
-			 * @Override public void onSuccess(List<SmsProxy> arg0) { // TODO
-			 * Auto-generated method stub list.addAll(arg0);
-			 * 
-			 * }
-			 */
+			
 			@Override
 			public void onFailure(ServerFailure error) {
 				list.clear();
