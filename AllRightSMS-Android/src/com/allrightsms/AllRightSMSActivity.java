@@ -114,12 +114,12 @@ public class AllRightSMSActivity extends Activity {
 	};
 
 	private final BroadcastReceiver smsReceiver = new BroadcastReceiver() {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle bundle = intent.getExtras();
 			final ManageContacts addContacts = new ManageContacts();
-			
+
 			Object messages[] = (Object[]) bundle.get("pdus");
 			SmsMessage smsMessage[] = new SmsMessage[messages.length];
 			for (int n = 0; n < messages.length; n++) {
@@ -138,17 +138,14 @@ public class AllRightSMSActivity extends Activity {
 					AllRightSMSRequest request = requestFactory
 							.allRightSMSRequest();
 					SmsProxy sms = request.create(SmsProxy.class);
-					// sms.setDueDate(new Date()); //già creato dal server
 					sms.setEmailAddress("");
 					sms.setPhoneNumber(NumberUtility.purgePrefix(number));
 					sms.setTextmessage(mex);
 					sms.setRead(false);
 					sms.setReceived(true);
-					
+					sms.setSync(true); // importante per non farsi rimandare il
+										// C2DM
 					sms.setName(addContacts.retrieveName(mContext, number));
-					
-					// importante per non farsi rimandare il C2DM
-					sms.setSync(true);
 
 					request.updateSms(sms).fire();
 
@@ -167,7 +164,7 @@ public class AllRightSMSActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
-		
+
 		// Register a receiver to provide register/unregister notifications
 		registerReceiver(mUpdateUIReceiver, new IntentFilter(
 				Util.UPDATE_UI_INTENT));
@@ -203,7 +200,7 @@ public class AllRightSMSActivity extends Activity {
 
 			startActivity(new Intent(this, AccountsActivity.class));
 		}
-		
+
 		setScreenContent(R.layout.hello_world);
 	}
 
@@ -325,11 +322,6 @@ public class AllRightSMSActivity extends Activity {
 				}.execute();
 			}
 		});
-		
-		
-		//startActivity(new Intent(this, AccountsActivity.class));
-		
-	//	startActivityForResult(new Intent(this,ManageContacts.class), 0);
 	}
 
 	// private final TimerTask t = new TimerTask() {
@@ -375,29 +367,31 @@ public class AllRightSMSActivity extends Activity {
 			int i = 1;
 			for (SmsProxy sms : newSms) {
 				if (size > 1) // se ci sono più messaggi inserisce 1/2
-										// davanti
+								// davanti
 				{
-					//Log.i(TAG, "[" + i + "/" + size + "]");
-					success = sendsms.Send(this, sms.getPhoneNumber(), "[" + i + "/"
-							+ size + "]" + sms.getTextmessage(),
+					// Log.i(TAG, "[" + i + "/" + size + "]");
+					success = sendsms.Send(this, sms.getPhoneNumber(), "[" + i
+							+ "/" + size + "]" + sms.getTextmessage(),
 							sms.getDueDate());// ritorna un booleano
 					i++;
 					if (!success)
 						break;
 				} else {
-					//invio di un messaggio senza problemi
+					// invio di un messaggio senza problemi
 					// Log.i(TAG, "Unico Messaggio");
 					success = sendsms.Send(this, sms.getPhoneNumber(),
 							sms.getTextmessage(), sms.getDueDate());// ritorna
-																	// un booleano
-					//aggiunto in data 10/02/2012
-			//		successupdate = addContacts.addNameToSms(this, sms);										
+
+					if (sms.getName().equals("Unknown"))
+						successupdate = addContacts.addNameToSms(mContext, sms);
 				}
 			}
-			if (success){
+			if (success) {
 				Util.generateNotification(mContext, "New SMS sent correctly!",
 						false);
-			}	
+			} else if (success && !successupdate)
+				Util.generateNotification(mContext,
+						"New SMS sent correctly, no name found!", false);
 			else
 				Util.generateNotification(mContext,
 						"New SMS Not sent correctly!", false);
@@ -406,16 +400,5 @@ public class AllRightSMSActivity extends Activity {
 			Util.generateNotification(mContext,
 					"Unable to send new SMS or No sms to send!", false);
 		}
-	}
-	
-	private void updateSms(SmsProxy sms)
-	{
-		ManageContacts addContacts = new ManageContacts();
-		MyRequestFactory requestFactory = Util.getRequestFactory(mContext, MyRequestFactory.class);
-		AllRightSMSRequest request = requestFactory.allRightSMSRequest();
-	
-		sms.setName(addContacts.retrieveName(mContext, number));
-		request.updateSms(sms).fire();
-		
 	}
 }
