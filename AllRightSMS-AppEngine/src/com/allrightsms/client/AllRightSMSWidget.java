@@ -74,6 +74,7 @@ public class AllRightSMSWidget extends Composite {
 	private final List<SmsProxy> allMessage = new LinkedList<SmsProxy>();
 	private final List<String> phoneNumber = new LinkedList<String>();
 	private String LoggedMail = "";
+	private ArrayList<SmsProxy> sortedTasks;
 
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
@@ -264,7 +265,7 @@ public class AllRightSMSWidget extends Composite {
 
 	public AllRightSMSWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
-
+		
 		sayHelloButton.getElement().setClassName("send centerbtn");
 		sendMessageButton.getElement().setClassName("send");
 		replyButtonOne.getElement().setClassName("send");
@@ -315,8 +316,9 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
+				
 				if (NumberUtility.ValidatePhoneNumber(recipientNumber
-						.getValue()))
+						.getValue()) && !messageArea.getValue().isEmpty())
 					create();
 				else
 					setStatus("Impossibile inviare il messaggio", false);
@@ -393,18 +395,18 @@ public class AllRightSMSWidget extends Composite {
 		// updateButton.setText("Update");
 		// updateButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(updateButton);
-		Button queryButton = new Button();
-		queryButton.setText("Query");
-		queryButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(queryButton);
+//		Button queryButton = new Button();
+//		queryButton.setText("Query");
+//		queryButton.getElement().setClassName(BUTTON_STYLE);
+	//	hp.add(queryButton);
 		// Button deleteButton = new Button();
 		// deleteButton.setText("Delete");
 		// deleteButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(deleteButton);
-		Button deleteAllButton = new Button();
-		deleteAllButton.setText("Delete All");
-		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(deleteAllButton);
+//		Button deleteAllButton = new Button();
+//		deleteAllButton.setText("Delete All");
+//		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
+	//	hp.add(deleteAllButton);
 
 		// Button queryUnreadButton = new Button();
 		// queryUnreadButton.setText("Unread");
@@ -447,19 +449,19 @@ public class AllRightSMSWidget extends Composite {
 		// }
 		// });
 
-		deleteAllButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				deleteAll();
-			}
-		});
-
-		queryButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				query();
-			}
-		});
+//		deleteAllButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				deleteAll();
+//			}
+//		});
+//
+//		queryButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				query();
+//			}
+//		});
 
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
@@ -472,7 +474,6 @@ public class AllRightSMSWidget extends Composite {
 				return true;
 			}
 		}, DELAY_MS);
-		// modificato
 	}
 
 	public static final Comparator<? super SmsProxy> TASK_COMPARATOR = new Comparator<SmsProxy>() {
@@ -516,78 +517,91 @@ public class AllRightSMSWidget extends Composite {
 		request.querySms().fire(new Receiver<List<SmsProxy>>() {
 			@Override
 			public void onSuccess(List<SmsProxy> response) {
-				if (response.size() > 0) { // && threadReceived.size() !=
-											// response.size()
-					// signin.setText(response.get(0).getEmailAddress());
-
-					// sort first the thelphone number
-					ArrayList<SmsProxy> sortedTasks = new ArrayList<SmsProxy>(
-							response);
-					Collections.sort(sortedTasks, TASK_COMPARATOR);
-					//se ci sono nuovi messaggi...
-					if (!sortedTasks.equals(allMessage)) {
-						allMessage.clear();
-						allMessage.addAll(sortedTasks);
-						// Collections.reverse(sortedTasks);
-						phoneNumber.clear();
-
-						// for (SmsProxy s : sortedTasks) {
-						// GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
-						// }
-
-						int i = 0;
-						while (i < sortedTasks.size() && i < THREADS_NUMBER) {
-							// ci sono meno elementi da mostrare o ne mostro
-							// solo
-							// gli ultimi 3
-							String number = NumberUtility
-									.purgePrefix(allMessage.get(i)
-											.getPhoneNumber());
-							if (!phoneNumber.contains(number)) {
-								phoneNumber.add(number);
-								i++;
-							}
-						}
-						constructForNumber();
-
-						// emette un suono per segnalare messaggio in arrivo!
-						SoundController soundController = new SoundController();
-						Sound sound = soundController.createSound(
-								Sound.MIME_TYPE_AUDIO_MPEG_MP3,
-								"bells-message.mp3");
-						// MIME_TYPE_AUDIO_MPEG
-						sound.play();
-					}
+				if (response.size() > 0) { 
 					
-					// check for notifications support
-					// you can omit the 'window' keyword
-									
-					
+					sortedTasks = new ArrayList<SmsProxy>(response);
+					showMessages();
 				} else {
-					allMessage.clear();
-					phoneNumber.clear();
-					smsTableOne.clear();
-					smsTableTwo.clear();
-					smsTableThree.clear();
-					smsUserNumberOne.setText("");
-					smsUserNumberTwo.setText("");
-					smsUserNumberThree.setText("");
-
-					headerOne.setAttribute("style", "display:none"); // display:block
-																		// to
-																		// visibility
-					headerTwo.setAttribute("style", "display:none");
-					headerThree.setAttribute("style", "display:none");
-					messageStatus.setInnerText("No message sent or received!");
+					clearMessage();
 				}
 			}
 		});
+	}
+	
+	private void clearMessage(){
+		allMessage.clear();
+		phoneNumber.clear();
+		smsTableOne.clear();
+		smsTableTwo.clear();
+		smsTableThree.clear();
+		smsUserNumberOne.setText("");
+		smsUserNumberTwo.setText("");
+		smsUserNumberThree.setText("");
+
+		// display:block to visibility
+		headerOne.setAttribute("style", "display:none"); 
+		headerTwo.setAttribute("style", "display:none");
+		headerThree.setAttribute("style", "display:none");
+		messageStatus.setInnerText("No message sent or received!");
+	}
+	
+	private void showMessages(){
+		
+		// sort first the thelephone number
+		Collections.sort(sortedTasks, TASK_COMPARATOR);
+		//se ci sono nuovi messaggi...
+		if (!sortedTasks.equals(allMessage)) {
+			allMessage.clear();
+			allMessage.addAll(sortedTasks);
+			// Collections.reverse(sortedTasks);
+			phoneNumber.clear();
+
+			// for (SmsProxy s : sortedTasks) {
+			// GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
+			// }
+
+			int i = 0;
+			for (SmsProxy s : sortedTasks) {
+				String number = NumberUtility.purgePrefix(s.getPhoneNumber());
+				if (!phoneNumber.contains(number)) {
+					phoneNumber.add(number);
+					i++;
+				}
+				if(i>=3)
+					break;
+			}
+			
+//			while (i < sortedTasks.size() && i < THREADS_NUMBER) {
+//				// ci sono meno elementi da mostrare o ne mostro
+//				// solo
+//				// gli ultimi 3
+//				String number = NumberUtility
+//						.purgePrefix(allMessage.get(i)
+//								.getPhoneNumber());
+//				if (!phoneNumber.contains(number)) {
+//					phoneNumber.add(number);
+//					i++;
+//				}
+//			}
+			constructForNumber();
+
+			// emette un suono per segnalare messaggio in arrivo!
+			SoundController soundController = new SoundController();
+			Sound sound = soundController.createSound(
+					Sound.MIME_TYPE_AUDIO_MPEG_MP3,
+					"bells-message.mp3");
+			// MIME_TYPE_AUDIO_MPEG
+			sound.play();
+		}
 	}
 
 	private void constructForNumber() {
 		smsTableOne.clear();
 		smsTableTwo.clear();
 		smsTableThree.clear();
+		smsUserNameOne.setText("Unknown");
+		smsUserNameTwo.setText("Unknown");
+		smsUserNameThree.setText("Unknown");
 		ThreadSmsReceived.get(0).clear();
 		ThreadSmsReceived.get(1).clear();
 		ThreadSmsReceived.get(2).clear();
@@ -602,6 +616,8 @@ public class AllRightSMSWidget extends Composite {
 				headerOne.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
+				if(smsUserNameOne.getText().equals("Unknown"))
+					smsUserNameOne.setText(s.getName());
 				smsTableOne.rebuild(s);
 				foundOne++;
 			}
@@ -611,6 +627,8 @@ public class AllRightSMSWidget extends Composite {
 				headerTwo.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberTwo.setText(s.getPhoneNumber());
+				if(smsUserNameTwo.getText().equals("Unknown"))
+					smsUserNameTwo.setText(s.getName());
 				smsTableTwo.rebuild(s);
 				foundTwo++;
 			}
@@ -620,6 +638,8 @@ public class AllRightSMSWidget extends Composite {
 				headerThree.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
+				if(smsUserNameThree.getText().equals("Unknown"))
+					smsUserNameThree.setText(s.getName());
 				smsTableThree.rebuild(s);
 				foundThree++;
 			}
@@ -637,13 +657,12 @@ public class AllRightSMSWidget extends Composite {
 				smsProxy = sms;
 				// update dell'sms sul server e invia la notifica C2DM al
 				// telefono android
-				update(smsProxy); // lo chiamo qui almeno sono sicuro di
-									// aggiornare l'sms corrente!
+				update(smsProxy); 
 			}
 
 			@Override
 			public void onFailure(ServerFailure error) {
-				Window.alert("UNABLE TO CREATE SMS");
+				Window.alert("Sms Non Inviato");
 			}
 		});
 	}
@@ -654,25 +673,19 @@ public class AllRightSMSWidget extends Composite {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		smsProxy = request.edit(smsProxy);
-		// smsProxy.setDueDate(new Date()); già impostato sul server
-		smsProxy.setEmailAddress("allrightsms@gmail.com"); // recipientArea.getValue()
 		smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber
-				.getValue()));
+				.getValue())); 
+		smsProxy.setName("Unknown");
 		smsProxy.setTextmessage(messageArea.getValue());
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override
 			public void onSuccess(SmsProxy sms) {
-
-				// Window.alert("UPDATE SUCCESS:(" + sms.getId() + "): "
-				// + sms.getPhoneNumber() + "\n messaggio: "
-				// + sms.getTextmessage());
-
 				setStatus("Sms Inviato Correttamente", false);
 			}
 
 			@Override
 			public void onFailure(ServerFailure error) {
-				Window.alert("UNABLE TO UPDATE");
+				Window.alert("Sms Non Inviato");
 			}
 		});
 	}
@@ -686,8 +699,9 @@ public class AllRightSMSWidget extends Composite {
 						for (SmsProxy sms : smsList) {
 							names += " (" + sms.getId() + "): "
 									+ sms.getEmailAddress() + "\n" + "Number: "
-									+ sms.getPhoneNumber() + " Text: "
-									+ sms.getTextmessage() + "\n sync="
+									+ sms.getPhoneNumber() + " Text: "									
+									+ sms.getTextmessage() + "\n Nome: "
+									+ sms.getName()+ "\n sync="
 									+ sms.getSync() + " received="
 									+ sms.getReceived() + " read="
 									+ sms.getRead() + "\n";

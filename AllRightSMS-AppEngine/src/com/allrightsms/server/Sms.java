@@ -14,7 +14,7 @@ public class Sms {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String name;
+	private String name = "Unknown";
 	private Date dueDate;
 	private String emailAddress;
 	private String userId;

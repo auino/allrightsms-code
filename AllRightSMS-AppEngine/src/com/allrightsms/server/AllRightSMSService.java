@@ -16,6 +16,7 @@ public class AllRightSMSService {
 		//TODO creare l'sms con già la data e l'ora in modo da averne una univoca... tipo il codice sotto
 		Sms s = new Sms();
 		s.setDueDate(new Date());
+		s.setName("Unknown");
 		return db.update(s);
 	}
 

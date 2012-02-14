@@ -48,7 +48,7 @@ public class HelloWorldService {
 	  User user = userService.getCurrentUser();
 	  
 	  String thisURL = "allrightsms.appspot.com";
-	  String retval = "allrightsms.appspot.com";
+	  String retval = "";
 		
 		if (user != null) {
 			retval += "<p>Hello, " + user.getEmail()
@@ -57,7 +57,7 @@ public class HelloWorldService {
 							+ "\">sign out</a>.</p>";
 		} else {
 			retval += "<p>Please <a href=\""
-							+ userService.createLoginURL("")
+							+ userService.createLoginURL(thisURL)
 							+ "\">sign in</a>.</p>";
 		}
 	  

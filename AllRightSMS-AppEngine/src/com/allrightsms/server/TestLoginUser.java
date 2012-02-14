@@ -25,7 +25,7 @@ public class TestLoginUser extends HttpServlet {
 		} else {
 			resp.getWriter().println(
 					"<p>Please <a href=\""
-							+ userService.createLoginURL("")
+							+ userService.createLoginURL(thisURL)
 							+ "\">sign in</a>.</p>");
 		}
 	}
