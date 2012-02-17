@@ -26,4 +26,13 @@ public class NumberUtility {
 			return num;
 		return num;
 	}
+	
+	public static String extractName(String s)
+	{
+		return s.substring(0, s.indexOf("(")-1);
+	}
+	
+	public static String addDash(String num){
+		return num.substring(0,3)+"-"+num.substring(3, num.length());
+	}
 }

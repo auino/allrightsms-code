@@ -28,6 +28,19 @@ public class DataStore {
 			pm.close();
 		}
 	}
+	
+	/**
+	 * Remove this object from the data store.
+	 */
+	public void deleteContact(Long id) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Contact item = pm.getObjectById(Contact.class, id);
+			pm.deletePersistent(item);
+		} finally {
+			pm.close();
+		}
+	}
 
 	/**
 	 * Find a {@link Sms} by id.
@@ -48,6 +61,33 @@ public class DataStore {
 					+ " where id==" + id.toString() + " && emailAddress=='"
 					+ getUserEmail() + "'");
 			List<Sms> list = (List<Sms>) query.execute();
+			return list.size() == 0 ? null : list.get(0);
+		} catch (RuntimeException e) {
+			System.out.println(e);
+			throw e;
+		} finally {
+			pm.close();
+		}
+	}
+	
+	/**
+	 * Find a {@link Contact} by id.
+	 * 
+	 * @param id the {@link Contact} id
+	 * @return the associated {@link Sms}, or null if not found
+	 */
+	@SuppressWarnings("unchecked")
+	public Contact findContact(Long id) {
+		if (id == null) {
+			return null;
+		}
+
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query query = pm.newQuery("select from " + Contact.class.getName()
+					+ " where id==" + id.toString() + " && emailAddress=='"
+					+ getUserEmail() + "'");
+			List<Contact> list = (List<Contact>) query.execute();
 			return list.size() == 0 ? null : list.get(0);
 		} catch (RuntimeException e) {
 			System.out.println(e);
@@ -101,23 +141,30 @@ public class DataStore {
 		}
 	}
 
-	/*
-	 * @SuppressWarnings("unchecked") public List<Sms> findAllUnsent() {
-	 * PersistenceManager pm = PMF.get().getPersistenceManager(); try { Query
-	 * query = pm.newQuery("select from " + Sms.class.getName() +
-	 * " where emailAddress=='" + getUserEmail() + "' and sync=='false'");
-	 * 
-	 * //potrei aggiungere and done="false" per avere tutti i messaggi non
-	 * ancora inviati
-	 * 
-	 * List<Sms> list = (List<Sms>) query.execute(); if (list.size() == 0) {
-	 * //Workaround for this issue:
-	 * //http://code.google.com/p/datanucleus-appengine/issues/detail?id=24
-	 * list.size(); }
-	 * 
-	 * return list; } catch (RuntimeException e) { System.out.println(e); throw
-	 * e; } finally { pm.close(); } }
-	 */
+	@SuppressWarnings("unchecked")
+	public List<Contact> findAllContacts() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query query;
+			query = pm.newQuery("SELECT FROM " + Contact.class.getName()
+						+ " WHERE emailAddressOwner=='"+ getUserEmail()+"'"); 
+			
+			List<Contact> list = (List<Contact>) query.execute();
+			if (list.size() == 0) {
+				// Workaround for this issue:
+				// http://code.google.com/p/datanucleus-appengine/issues/detail?id=24
+				list.size();
+			}
+			return list;
+
+		} catch (RuntimeException e) {
+			System.out.println(e);
+			throw e;
+		} finally {
+			pm.close();
+		}
+	}
+	
 	/**
 	 * Persist this object in the datastore.
 	 */
@@ -138,6 +185,21 @@ public class DataStore {
 			pm.close();
 		}
 	}
+	
+	/*
+	 * Persistent the contact in the datastore
+	 */
+	public Contact update(Contact cont){
+		//TODO
+		cont.setEmailAddressOwner(getUserEmail());
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			pm.makePersistent(cont);
+			return cont;
+		} finally {
+			pm.close();
+		}
+	}	
 
 	public static String getUserId() {
 		UserService userService = UserServiceFactory.getUserService();

@@ -20,11 +20,11 @@ public class Sms {
 	private String userId;
 	private String textmessage;
 	private String phoneNumber;
-	private Boolean sync = Boolean.FALSE; // True if sent correctly from mobile,
+	private boolean sync = false; // True if sent correctly from mobile,
 											// False otherwise
-	private Boolean read = Boolean.FALSE; // True if read from web app, False
+	private boolean read = false; // True if read from web app, False
 											// otherwise
-	private Boolean received = Boolean.FALSE; // True if received from mobile,
+	private boolean received = false; // True if received from mobile,
 												// False if sent from Web App.
 
 	public Sms() {
@@ -109,5 +109,4 @@ public class Sms {
 	public void setReceived(Boolean received) {
 		this.received = received;
 	}
-
 }

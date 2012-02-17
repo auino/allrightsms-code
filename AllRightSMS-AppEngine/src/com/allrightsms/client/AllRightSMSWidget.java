@@ -21,16 +21,22 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
+import com.allrightsms.shared.AllRightSMSContactRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
+import com.allrightsms.shared.ContactProxy;
 import com.allrightsms.shared.NumberUtility;
 import com.allrightsms.shared.SmsProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -45,14 +51,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
-import com.allen_sauer.gwt.voices.client.Sound;
-import com.allen_sauer.gwt.voices.client.SoundController;
 
 public class AllRightSMSWidget extends Composite {
 
@@ -75,21 +81,24 @@ public class AllRightSMSWidget extends Composite {
 	private final List<String> phoneNumber = new LinkedList<String>();
 	private String LoggedMail = "";
 	private ArrayList<SmsProxy> sortedTasks;
+	private ArrayList<ContactProxy> contact;
+	private Map<String, String> map = new java.util.HashMap<String, String>();
 
+	
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
 
 	private static AllRightSMSUiBinder uiBinder = GWT
 			.create(AllRightSMSUiBinder.class);
-
+	
 	@UiField
 	TextAreaElement messageArea;
 
 	@UiField
 	DivElement signout;
 
-	@UiField
-	InputElement recipientNumber; 
+	@UiField (provided = true) 
+	SuggestBox recipientNumber; //InputElement
 
 	@UiField
 	DivElement status;
@@ -262,9 +271,44 @@ public class AllRightSMSWidget extends Composite {
 		 * }
 		 */
 	}	
+	
+	private final MultiWordSuggestOracle mySuggestions = new MultiWordSuggestOracle();
 
+	@SuppressWarnings("deprecation")
 	public AllRightSMSWidget() {
+		
+		recipientNumber = new SuggestBox(mySuggestions); 
+		messageArea.setTitle("Message");
+	
+	//	recipientNumber.setText("Cell number");
+		recipientNumber.getTextBox().getElement().getStyle().setProperty("placeholder","Cell Number");
+		
+		
+		//prima di fare il bind posso istanziare le classi
 		initWidget(uiBinder.createAndBindUi(this));
+
+		
+
+		
+		
+		//cerco di simulare focus sul recipient number, per simulare il placeholder
+	
+//		recipientNumber.addFocusListener(new FocusListener() {
+//			
+//			@Override
+//			public void onLostFocus(Widget sender) {
+//				// TODO Auto-generated method stub
+//				recipientNumber.setText("Cell Number");
+//			}
+//			
+//			@Override
+//			public void onFocus(Widget sender) {
+//				// TODO Auto-generated method stub
+//				recipientNumber.setText("");
+//			}
+//		});
+		
+		
 		
 		sayHelloButton.getElement().setClassName("send centerbtn");
 		sendMessageButton.getElement().setClassName("send");
@@ -317,11 +361,11 @@ public class AllRightSMSWidget extends Composite {
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
 				
-				if (NumberUtility.ValidatePhoneNumber(recipientNumber
-						.getValue()) && !messageArea.getValue().isEmpty())
+		//		if (NumberUtility.ValidatePhoneNumber(recipientNumber
+			//			.getValue()) && !messageArea.getValue().isEmpty())
 					create();
-				else
-					setStatus("Impossibile inviare il messaggio", false);
+			//	else
+				//	setStatus("Impossibile inviare il messaggio", false);
 			}
 		});
 
@@ -330,8 +374,14 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (!ThreadSmsReceived.isEmpty()
-						&& !ThreadSmsReceived.get(0).isEmpty())
-					reply(ThreadSmsReceived.get(0).get(0).getPhoneNumber());
+						&& !ThreadSmsReceived.get(0).isEmpty()){
+					String num = ThreadSmsReceived.get(0).get(0).getPhoneNumber();
+					String name = ThreadSmsReceived.get(0).get(0).getName();
+					if(!name.equals("Unknown")){
+						reply(createSuggestionString(name, num));
+					} else
+						reply(num);
+				}
 			}
 		});
 
@@ -339,17 +389,29 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (!ThreadSmsReceived.isEmpty()
-						&& !ThreadSmsReceived.get(1).isEmpty())
-					reply(ThreadSmsReceived.get(1).get(0).getPhoneNumber());
+						&& !ThreadSmsReceived.get(1).isEmpty()){
+					String num = ThreadSmsReceived.get(1).get(0).getPhoneNumber();
+					String name = ThreadSmsReceived.get(1).get(0).getName();
+					if(!name.equals("Unknown")){
+						reply(createSuggestionString(name, num));
+					} else
+						reply(num);
+				}
 			}
 		});
 
 		replyButtonThree.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (!ThreadSmsReceived.isEmpty()
-						&& !ThreadSmsReceived.get(2).isEmpty())
-					reply(ThreadSmsReceived.get(2).get(0).getPhoneNumber());
+				if (!ThreadSmsReceived.isEmpty() && !ThreadSmsReceived.get(2).isEmpty())
+				{
+					String num = ThreadSmsReceived.get(2).get(0).getPhoneNumber();
+					String name = ThreadSmsReceived.get(2).get(0).getName();
+					if(!name.equals("Unknown")){
+						reply(createSuggestionString(name, num));
+					} else
+						reply(num);
+				}
 			}
 		});
 
@@ -403,10 +465,10 @@ public class AllRightSMSWidget extends Composite {
 		// deleteButton.setText("Delete");
 		// deleteButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(deleteButton);
-//		Button deleteAllButton = new Button();
-//		deleteAllButton.setText("Delete All");
-//		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
-	//	hp.add(deleteAllButton);
+		Button deleteAllButton = new Button();
+		deleteAllButton.setText("Delete All");
+		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
+		hp.add(deleteAllButton);
 
 		// Button queryUnreadButton = new Button();
 		// queryUnreadButton.setText("Unread");
@@ -449,12 +511,12 @@ public class AllRightSMSWidget extends Composite {
 		// }
 		// });
 
-//		deleteAllButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				deleteAll();
-//			}
-//		});
+		deleteAllButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				deleteAll();
+			}
+		});
 //
 //		queryButton.addClickHandler(new ClickHandler() {
 //			@Override
@@ -463,6 +525,9 @@ public class AllRightSMSWidget extends Composite {
 //			}
 //		});
 
+		//carica i suggerimenti per la suggestBox
+		getSuggestion();
+		
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
 
@@ -475,6 +540,48 @@ public class AllRightSMSWidget extends Composite {
 			}
 		}, DELAY_MS);
 	}
+	
+	public void getSuggestion()
+	{
+		AllRightSMSContactRequest request = RequestFactory.allRightSMSContactRequest();
+		request.queryContacts().fire(new Receiver<List<ContactProxy>>() {
+
+			@Override
+			public void onSuccess(List<ContactProxy> response) {
+				// TODO Auto-generated method stub
+				contact = new ArrayList<ContactProxy>(response);
+				constructSuggestion();
+			}
+		});
+	}
+	
+	private void constructSuggestion()
+	{
+		map.clear();
+		for (ContactProxy c : contact) {
+			String temp = createSuggestionString(c.getName(), c.getNumber());
+			map.put(c.getName(), c.getNumber());
+			mySuggestions.add(temp);
+		}
+	}
+	
+	//private method for uniform suggestion string
+	private String createSuggestionString(String name, String num){
+		return name+" ("+NumberUtility.purgeNumber(num)+")";
+	}
+	
+//	private String retrieveContactKeyFromHash(String contact)
+//	{
+//		for (Object o: map.entrySet()) {
+//	        Map.Entry entry = (Map.Entry) o;
+//
+//	        if(entry.getValue().equals(contact))
+//	        {
+//	            return entry.getKey().toString();	
+//	        }
+//		}
+//		return null;
+//	}
 
 	public static final Comparator<? super SmsProxy> TASK_COMPARATOR = new Comparator<SmsProxy>() {
 		public int compare(SmsProxy t0, SmsProxy t1) {
@@ -507,7 +614,7 @@ public class AllRightSMSWidget extends Composite {
 	};
 
 	private void reply(String number) {
-		recipientNumber.setValue(number);
+		recipientNumber.setText(number);
 		messageArea.focus();
 	}
 
@@ -555,11 +662,7 @@ public class AllRightSMSWidget extends Composite {
 			allMessage.addAll(sortedTasks);
 			// Collections.reverse(sortedTasks);
 			phoneNumber.clear();
-
-			// for (SmsProxy s : sortedTasks) {
-			// GWT.log("Messaggio: "+s.getTextmessage()+" in data: "+s.getDueDate());
-			// }
-
+			
 			int i = 0;
 			for (SmsProxy s : sortedTasks) {
 				String number = NumberUtility.purgePrefix(s.getPhoneNumber());
@@ -571,18 +674,6 @@ public class AllRightSMSWidget extends Composite {
 					break;
 			}
 			
-//			while (i < sortedTasks.size() && i < THREADS_NUMBER) {
-//				// ci sono meno elementi da mostrare o ne mostro
-//				// solo
-//				// gli ultimi 3
-//				String number = NumberUtility
-//						.purgePrefix(allMessage.get(i)
-//								.getPhoneNumber());
-//				if (!phoneNumber.contains(number)) {
-//					phoneNumber.add(number);
-//					i++;
-//				}
-//			}
 			constructForNumber();
 
 			// emette un suono per segnalare messaggio in arrivo!
@@ -673,9 +764,24 @@ public class AllRightSMSWidget extends Composite {
 
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		smsProxy = request.edit(smsProxy);
-		smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber
-				.getValue())); 
-		smsProxy.setName("Unknown");
+
+		if(!NumberUtility.ValidatePhoneNumber(recipientNumber.getValue())){
+			String name = NumberUtility.extractName(recipientNumber.getValue());
+			String number = map.get(name);
+			if(name!=null){ //num è null se non è presente nella mappa... quindi è un numero inserito a mano
+				smsProxy.setPhoneNumber(NumberUtility.purgeNumber(number)); 
+				smsProxy.setName(name);
+			}
+			else{
+				smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue())); 
+				smsProxy.setName("Unknown");
+			}
+		} else {
+			smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue())); 
+			smsProxy.setName("Unknown");
+		}
+			
+		
 		smsProxy.setTextmessage(messageArea.getValue());
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override

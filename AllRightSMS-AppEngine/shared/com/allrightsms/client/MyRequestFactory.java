@@ -15,6 +15,7 @@
  */
 package com.allrightsms.client;
 
+import com.allrightsms.shared.AllRightSMSContactRequest;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.MessageProxy;
 import com.allrightsms.shared.RegistrationInfoProxy;
@@ -32,7 +33,7 @@ public interface MyRequestFactory extends RequestFactory {
 		 * Retrieve a "Hello, World" message from the server.
 		 */
 		Request<String> getMessage();
-		
+
 		Request<String> getMail();
 	}
 
@@ -56,7 +57,7 @@ public interface MyRequestFactory extends RequestFactory {
 		 */
 		InstanceRequest<MessageProxy, String> send();
 	}
-	
+
 	public interface ContactsRequest extends RequestContext {
 		/**
 		 * request for contacts data
@@ -71,5 +72,7 @@ public interface MyRequestFactory extends RequestFactory {
 	MessageRequest messageRequest();
 
 	AllRightSMSRequest allRightSMSRequest();
+
+	AllRightSMSContactRequest allRightSMSContactRequest();
 
 }
