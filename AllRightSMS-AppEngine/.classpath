@@ -10,6 +10,7 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/c2dm-server.jar" sourcepath="war/WEB-INF/lib/c2dm-server-src.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-voices-2.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/IntoGwt-1-5-0.jar"/>
 	<classpathentry kind="src" path=".apt_generated">
 		<attributes>
 			<attribute name="optional" value="true"/>

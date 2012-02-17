@@ -14,7 +14,7 @@
 	<!-- Inherit sound support -->
 	<inherits name='com.allen_sauer.gwt.voices.gwt-voices' />
 
-	<!-- Inherit particular suggestbox with placeholder text -->
+	<!--  Inherit some features for suggestbox -->
 	<inherits name='eu.nextstreet.gwt.components.IntoGwt' />
 
 	<!-- Other module inherits -->
