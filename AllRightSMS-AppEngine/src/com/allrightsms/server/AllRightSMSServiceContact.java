@@ -42,8 +42,6 @@ public class AllRightSMSServiceContact {
 	
 	@ServiceMethod
 	public void deleteAllContact() {
-		// TODO Auto-generated method stub
-		//controllare
 		for (Contact c : queryContacts()) {
 			deleteContact(c);
 		}

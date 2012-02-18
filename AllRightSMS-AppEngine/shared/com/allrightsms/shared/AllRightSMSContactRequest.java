@@ -18,6 +18,8 @@ public interface AllRightSMSContactRequest extends RequestContext {
 	Request<ContactProxy> updateContact(ContactProxy contact);
 
 	Request<Void> deleteContact(ContactProxy contact);
+	
+	Request<Void> deleteAllContact();
 
 	Request<List<ContactProxy>> queryContacts();
 
