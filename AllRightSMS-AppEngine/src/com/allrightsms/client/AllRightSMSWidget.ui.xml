@@ -17,21 +17,17 @@
 					
 			<div id="message">
 				
-				<!-- <div class="ui-widget">
-						<label for="tags">Tags: </label>
-						<input id="tags">
-					</div> -->
-				
-				
 				<div class="roundRect" style="margin-bottom:60px;">
-				<!-- Added on 16/02/2012 -->
-					
-				<!-- <input ui:field="recipientNumber" type="text" class="field"
-					 size="62" placeholder="Cell number" />  --> 		
-				<g:SuggestBox ui:field="recipientNumber"/>
-				<textarea ui:field="messageArea" cols="46" rows="3"
-						placeholder="Message" />
 
+				<!-- 	 <input ui:field="recipientNumber" type="text" class="field"
+						 size="62" placeholder="Cell number" />  	
+						 
+						 <g:MySuggestBox ui:field="recipientNumber" placeholder="Cell number"/> -->	
+						 
+					<t:MySuggestBox ui:field="recipientNumber" placeHolderText="someText" /> 
+					<textarea ui:field="messageArea" cols="46" rows="3"
+							placeholder="Message" />
+			
 					<g:Button ui:field="sendMessageButton">Send Message</g:Button>
 
 				</div>

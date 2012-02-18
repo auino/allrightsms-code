@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
 import com.allrightsms.client.MyRequestFactory.HelloWorldRequest;
@@ -37,6 +36,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -82,23 +82,21 @@ public class AllRightSMSWidget extends Composite {
 	private String LoggedMail = "";
 	private ArrayList<SmsProxy> sortedTasks;
 	private ArrayList<ContactProxy> contact;
-	private Map<String, String> map = new java.util.HashMap<String, String>();
 
-	
 	interface AllRightSMSUiBinder extends UiBinder<Widget, AllRightSMSWidget> {
 	}
 
 	private static AllRightSMSUiBinder uiBinder = GWT
 			.create(AllRightSMSUiBinder.class);
-	
+
 	@UiField
 	TextAreaElement messageArea;
 
 	@UiField
 	DivElement signout;
 
-	@UiField (provided = true) 
-	SuggestBox recipientNumber; //InputElement
+	@UiField
+	MySuggestBox recipientNumber; // InputElement (provided = true)
 
 	@UiField
 	DivElement status;
@@ -175,7 +173,7 @@ public class AllRightSMSWidget extends Composite {
 			status.setInnerText("");
 			status.setClassName(STATUS_NONE);
 			messageArea.setValue("");
-			recipientNumber.setValue("");
+			// recipientNumber.setValue("");
 		}
 	};
 
@@ -250,8 +248,6 @@ public class AllRightSMSWidget extends Composite {
 			this.setHTML(this.getHTML() + html);
 		}
 
-	
-		
 		/*
 		 * StackPanel (che è una figata) String text1 =
 		 * "Lorem ipsum dolor sit amet..."; String text2 =
@@ -270,46 +266,32 @@ public class AllRightSMSWidget extends Composite {
 		 * 
 		 * }
 		 */
-	}	
-	
-	private final MultiWordSuggestOracle mySuggestions = new MultiWordSuggestOracle();
+	}
 
-	@SuppressWarnings("deprecation")
 	public AllRightSMSWidget() {
-		
-		recipientNumber = new SuggestBox(mySuggestions); 
-		messageArea.setTitle("Message");
-	
-	//	recipientNumber.setText("Cell number");
-		recipientNumber.getTextBox().getElement().getStyle().setProperty("placeholder","Cell Number");
-		
-		
-		//prima di fare il bind posso istanziare le classi
 		initWidget(uiBinder.createAndBindUi(this));
 
-		
+		messageArea.setTitle("Message");
+		recipientNumber.setTitle("Cell number");
 
-		
-		
-		//cerco di simulare focus sul recipient number, per simulare il placeholder
-	
-//		recipientNumber.addFocusListener(new FocusListener() {
-//			
-//			@Override
-//			public void onLostFocus(Widget sender) {
-//				// TODO Auto-generated method stub
-//				recipientNumber.setText("Cell Number");
-//			}
-//			
-//			@Override
-//			public void onFocus(Widget sender) {
-//				// TODO Auto-generated method stub
-//				recipientNumber.setText("");
-//			}
-//		});
-		
-		
-		
+		// cerco di simulare focus sul recipient number, per simulare il
+		// placeholder
+
+		// recipientNumber.addFocusListener(new FocusListener() {
+		//
+		// @Override
+		// public void onLostFocus(Widget sender) {
+		// // TODO Auto-generated method stub
+		// recipientNumber.setText("Cell Number");
+		// }
+		//
+		// @Override
+		// public void onFocus(Widget sender) {
+		// // TODO Auto-generated method stub
+		// recipientNumber.setText("");
+		// }
+		// });
+
 		sayHelloButton.getElement().setClassName("send centerbtn");
 		sendMessageButton.getElement().setClassName("send");
 		replyButtonOne.getElement().setClassName("send");
@@ -318,54 +300,33 @@ public class AllRightSMSWidget extends Composite {
 
 		// inizializzo il bus per le chiamate al server
 		RequestFactory.initialize(eventBus);
-		
-		//inserire la request che mi da la mail dell'utente	e se possibile l'url di logout
-		HelloWorldRequest helloWorldRequest = RequestFactory.helloWorldRequest();
-			helloWorldRequest.getMail().fire(new Receiver<String>() {
 
-				@Override
-				public void onSuccess(String response) {
-					LoggedMail = response;
-					signout.setInnerHTML(response);
-				}
-		});	
+		// inserire la request che mi da la mail dell'utente e se possibile
+		// l'url di logout
+		HelloWorldRequest helloWorldRequest = RequestFactory
+				.helloWorldRequest();
+		helloWorldRequest.getMail().fire(new Receiver<String>() {
+
+			@Override
+			public void onSuccess(String response) {
+				LoggedMail = response;
+				signout.setInnerHTML(response);
+			}
+		});
 
 		// inizializzo le tre liste di messaggi
 		ThreadSmsReceived.add(0, new LinkedList<SmsProxy>());
 		ThreadSmsReceived.add(1, new LinkedList<SmsProxy>());
 		ThreadSmsReceived.add(2, new LinkedList<SmsProxy>());
 
-		// // inizio comportamento tabella uno
-		// ListDataProvider<SmsProxy> listDataProvider = new
-		// ListDataProvider<SmsProxy>();
-		// // listDataProvider.addDataDisplay(smsTableOne);
-		// ThreadSmsReceived.add(0, listDataProvider.getList());
-		// // fine comportamento tabella uno
-		//
-		// // inizio comportamento tabella due
-		// ListDataProvider<SmsProxy> listDataProvider2 = new
-		// ListDataProvider<SmsProxy>();
-		// // listDataProvider2.addDataDisplay(smsTableTwo);
-		// ThreadSmsReceived.add(1, listDataProvider2.getList());
-		// // fine comportamento tabella due
-		//
-		// // inizio comportamento tabella tre
-		// ListDataProvider<SmsProxy> listDataProvider3 = new
-		// ListDataProvider<SmsProxy>();
-		// // listDataProvider3.addDataDisplay(smsTableThree);
-		// ThreadSmsReceived.add(2, listDataProvider3.getList());
-		// // fine comportamento tabella tre
-
 		sendMessageButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
-				
-		//		if (NumberUtility.ValidatePhoneNumber(recipientNumber
-			//			.getValue()) && !messageArea.getValue().isEmpty())
+				if (!recipientNumber.getValue().isEmpty() & !messageArea.getValue().isEmpty())
 					create();
-			//	else
-				//	setStatus("Impossibile inviare il messaggio", false);
+				else
+				 setStatus("Impossibile inviare il messaggio", false);
 			}
 		});
 
@@ -374,11 +335,12 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (!ThreadSmsReceived.isEmpty()
-						&& !ThreadSmsReceived.get(0).isEmpty()){
-					String num = ThreadSmsReceived.get(0).get(0).getPhoneNumber();
+						&& !ThreadSmsReceived.get(0).isEmpty()) {
+					String num = ThreadSmsReceived.get(0).get(0)
+							.getPhoneNumber();
 					String name = ThreadSmsReceived.get(0).get(0).getName();
-					if(!name.equals("Unknown")){
-						reply(createSuggestionString(name, num));
+					if (!name.equals("Unknown")) {
+						reply(NumberUtility.createSuggestionString(name, num));
 					} else
 						reply(num);
 				}
@@ -389,11 +351,12 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (!ThreadSmsReceived.isEmpty()
-						&& !ThreadSmsReceived.get(1).isEmpty()){
-					String num = ThreadSmsReceived.get(1).get(0).getPhoneNumber();
+						&& !ThreadSmsReceived.get(1).isEmpty()) {
+					String num = ThreadSmsReceived.get(1).get(0)
+							.getPhoneNumber();
 					String name = ThreadSmsReceived.get(1).get(0).getName();
-					if(!name.equals("Unknown")){
-						reply(createSuggestionString(name, num));
+					if (!name.equals("Unknown")) {
+						reply(NumberUtility.createSuggestionString(name, num));
 					} else
 						reply(num);
 				}
@@ -403,12 +366,13 @@ public class AllRightSMSWidget extends Composite {
 		replyButtonThree.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (!ThreadSmsReceived.isEmpty() && !ThreadSmsReceived.get(2).isEmpty())
-				{
-					String num = ThreadSmsReceived.get(2).get(0).getPhoneNumber();
+				if (!ThreadSmsReceived.isEmpty()
+						&& !ThreadSmsReceived.get(2).isEmpty()) {
+					String num = ThreadSmsReceived.get(2).get(0)
+							.getPhoneNumber();
 					String name = ThreadSmsReceived.get(2).get(0).getName();
-					if(!name.equals("Unknown")){
-						reply(createSuggestionString(name, num));
+					if (!name.equals("Unknown")) {
+						reply(NumberUtility.createSuggestionString(name, num));
 					} else
 						reply(num);
 				}
@@ -457,10 +421,10 @@ public class AllRightSMSWidget extends Composite {
 		// updateButton.setText("Update");
 		// updateButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(updateButton);
-//		Button queryButton = new Button();
-//		queryButton.setText("Query");
-//		queryButton.getElement().setClassName(BUTTON_STYLE);
-	//	hp.add(queryButton);
+		// Button queryButton = new Button();
+		// queryButton.setText("Query");
+		// queryButton.getElement().setClassName(BUTTON_STYLE);
+		// hp.add(queryButton);
 		// Button deleteButton = new Button();
 		// deleteButton.setText("Delete");
 		// deleteButton.getElement().setClassName(BUTTON_STYLE);
@@ -517,17 +481,17 @@ public class AllRightSMSWidget extends Composite {
 				deleteAll();
 			}
 		});
-//
-//		queryButton.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				query();
-//			}
-//		});
+		//
+		// queryButton.addClickHandler(new ClickHandler() {
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// query();
+		// }
+		// });
 
-		//carica i suggerimenti per la suggestBox
+		// carica i suggerimenti per la suggestBox
 		getSuggestion();
-		
+
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
 
@@ -540,48 +504,19 @@ public class AllRightSMSWidget extends Composite {
 			}
 		}, DELAY_MS);
 	}
-	
-	public void getSuggestion()
-	{
-		AllRightSMSContactRequest request = RequestFactory.allRightSMSContactRequest();
+
+	public void getSuggestion() {
+		AllRightSMSContactRequest request = RequestFactory
+				.allRightSMSContactRequest();
 		request.queryContacts().fire(new Receiver<List<ContactProxy>>() {
 
 			@Override
 			public void onSuccess(List<ContactProxy> response) {
-				// TODO Auto-generated method stub
 				contact = new ArrayList<ContactProxy>(response);
-				constructSuggestion();
+				recipientNumber.constructSuggestion(contact);
 			}
 		});
 	}
-	
-	private void constructSuggestion()
-	{
-		map.clear();
-		for (ContactProxy c : contact) {
-			String temp = createSuggestionString(c.getName(), c.getNumber());
-			map.put(c.getName(), c.getNumber());
-			mySuggestions.add(temp);
-		}
-	}
-	
-	//private method for uniform suggestion string
-	private String createSuggestionString(String name, String num){
-		return name+" ("+NumberUtility.purgeNumber(num)+")";
-	}
-	
-//	private String retrieveContactKeyFromHash(String contact)
-//	{
-//		for (Object o: map.entrySet()) {
-//	        Map.Entry entry = (Map.Entry) o;
-//
-//	        if(entry.getValue().equals(contact))
-//	        {
-//	            return entry.getKey().toString();	
-//	        }
-//		}
-//		return null;
-//	}
 
 	public static final Comparator<? super SmsProxy> TASK_COMPARATOR = new Comparator<SmsProxy>() {
 		public int compare(SmsProxy t0, SmsProxy t1) {
@@ -624,8 +559,8 @@ public class AllRightSMSWidget extends Composite {
 		request.querySms().fire(new Receiver<List<SmsProxy>>() {
 			@Override
 			public void onSuccess(List<SmsProxy> response) {
-				if (response.size() > 0) { 
-					
+				if (response.size() > 0) {
+
 					sortedTasks = new ArrayList<SmsProxy>(response);
 					showMessages();
 				} else {
@@ -634,8 +569,8 @@ public class AllRightSMSWidget extends Composite {
 			}
 		});
 	}
-	
-	private void clearMessage(){
+
+	private void clearMessage() {
 		allMessage.clear();
 		phoneNumber.clear();
 		smsTableOne.clear();
@@ -646,23 +581,23 @@ public class AllRightSMSWidget extends Composite {
 		smsUserNumberThree.setText("");
 
 		// display:block to visibility
-		headerOne.setAttribute("style", "display:none"); 
+		headerOne.setAttribute("style", "display:none");
 		headerTwo.setAttribute("style", "display:none");
 		headerThree.setAttribute("style", "display:none");
 		messageStatus.setInnerText("No message sent or received!");
 	}
-	
-	private void showMessages(){
-		
+
+	private void showMessages() {
+
 		// sort first the thelephone number
 		Collections.sort(sortedTasks, TASK_COMPARATOR);
-		//se ci sono nuovi messaggi...
+		// se ci sono nuovi messaggi...
 		if (!sortedTasks.equals(allMessage)) {
 			allMessage.clear();
 			allMessage.addAll(sortedTasks);
 			// Collections.reverse(sortedTasks);
 			phoneNumber.clear();
-			
+
 			int i = 0;
 			for (SmsProxy s : sortedTasks) {
 				String number = NumberUtility.purgePrefix(s.getPhoneNumber());
@@ -670,17 +605,16 @@ public class AllRightSMSWidget extends Composite {
 					phoneNumber.add(number);
 					i++;
 				}
-				if(i>=3)
+				if (i >= 3)
 					break;
 			}
-			
+
 			constructForNumber();
 
 			// emette un suono per segnalare messaggio in arrivo!
 			SoundController soundController = new SoundController();
 			Sound sound = soundController.createSound(
-					Sound.MIME_TYPE_AUDIO_MPEG_MP3,
-					"bells-message.mp3");
+					Sound.MIME_TYPE_AUDIO_MPEG_MP3, "bells-message.mp3");
 			// MIME_TYPE_AUDIO_MPEG
 			sound.play();
 		}
@@ -707,7 +641,7 @@ public class AllRightSMSWidget extends Composite {
 				headerOne.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
-				if(smsUserNameOne.getText().equals("Unknown"))
+				if (smsUserNameOne.getText().equals("Unknown"))
 					smsUserNameOne.setText(s.getName());
 				smsTableOne.rebuild(s);
 				foundOne++;
@@ -718,7 +652,7 @@ public class AllRightSMSWidget extends Composite {
 				headerTwo.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberTwo.setText(s.getPhoneNumber());
-				if(smsUserNameTwo.getText().equals("Unknown"))
+				if (smsUserNameTwo.getText().equals("Unknown"))
 					smsUserNameTwo.setText(s.getName());
 				smsTableTwo.rebuild(s);
 				foundTwo++;
@@ -729,7 +663,7 @@ public class AllRightSMSWidget extends Composite {
 				headerThree.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
-				if(smsUserNameThree.getText().equals("Unknown"))
+				if (smsUserNameThree.getText().equals("Unknown"))
 					smsUserNameThree.setText(s.getName());
 				smsTableThree.rebuild(s);
 				foundThree++;
@@ -748,7 +682,7 @@ public class AllRightSMSWidget extends Composite {
 				smsProxy = sms;
 				// update dell'sms sul server e invia la notifica C2DM al
 				// telefono android
-				update(smsProxy); 
+				update(smsProxy);
 			}
 
 			@Override
@@ -765,23 +699,37 @@ public class AllRightSMSWidget extends Composite {
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		smsProxy = request.edit(smsProxy);
 
-		if(!NumberUtility.ValidatePhoneNumber(recipientNumber.getValue())){
+		//se è un valore dell'autocomplete
+		if (!NumberUtility.ValidatePhoneNumber(recipientNumber.getValue())) {
 			String name = NumberUtility.extractName(recipientNumber.getValue());
-			String number = map.get(name);
-			if(name!=null){ //num è null se non è presente nella mappa... quindi è un numero inserito a mano
-				smsProxy.setPhoneNumber(NumberUtility.purgeNumber(number)); 
+			String number = recipientNumber.getMap().get(name);
+		
+			// se non sono riuscito ad estrarre il numero correttamente dall'autocomplete, elimino sms sul server
+			if(!NumberUtility.ValidatePhoneNumber(number)) 
+				request.deleteSms(smsProxy).fire(new Receiver<Void>() {
+
+					@Override
+					public void onSuccess(Void response) {
+						// TODO Auto-generated method stub
+						setStatus("Numero di telefono non corretto, sms non inviato", false);
+					}
+				});
+				
+			if (name != null) { // num è null se non è presente nella mappa...
+								// quindi è un numero inserito a mano
+				smsProxy.setPhoneNumber(NumberUtility.purgeNumber(number));
 				smsProxy.setName(name);
-			}
-			else{
-				smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue())); 
+			} else {
+				smsProxy.setPhoneNumber(NumberUtility
+						.purgeNumber(recipientNumber.getValue()));
 				smsProxy.setName("Unknown");
 			}
 		} else {
-			smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber.getValue())); 
+			smsProxy.setPhoneNumber(NumberUtility.purgeNumber(recipientNumber
+					.getValue()));
 			smsProxy.setName("Unknown");
 		}
-			
-		
+
 		smsProxy.setTextmessage(messageArea.getValue());
 		request.updateSms(sms).fire(new Receiver<SmsProxy>() {
 			@Override
@@ -805,9 +753,9 @@ public class AllRightSMSWidget extends Composite {
 						for (SmsProxy sms : smsList) {
 							names += " (" + sms.getId() + "): "
 									+ sms.getEmailAddress() + "\n" + "Number: "
-									+ sms.getPhoneNumber() + " Text: "									
+									+ sms.getPhoneNumber() + " Text: "
 									+ sms.getTextmessage() + "\n Nome: "
-									+ sms.getName()+ "\n sync="
+									+ sms.getName() + "\n sync="
 									+ sms.getSync() + " received="
 									+ sms.getReceived() + " read="
 									+ sms.getRead() + "\n";

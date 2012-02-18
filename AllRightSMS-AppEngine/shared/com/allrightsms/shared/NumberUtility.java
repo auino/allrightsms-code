@@ -35,4 +35,9 @@ public class NumberUtility {
 	public static String addDash(String num){
 		return num.substring(0,3)+"-"+num.substring(3, num.length());
 	}
+	
+	//private method for uniform suggestion string
+	public static String createSuggestionString(String name, String num){
+		return name+" ("+NumberUtility.purgeNumber(num)+")";
+	}
 }
