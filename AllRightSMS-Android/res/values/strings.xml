@@ -72,5 +72,8 @@
 
     <!-- Notification message [CHAR LIMIT=NONE] -->
     <string name="unregistration_succeeded">Unegistered %1$s for C2DM messaging.</string>
-
+	
+    <!-- Simulator -->
+    <string name="sync_contacts">Sync Contacts</string>
+    
 </resources>

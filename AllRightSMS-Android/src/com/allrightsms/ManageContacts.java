@@ -1,26 +1,25 @@
 package com.allrightsms;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.allrightsms.client.MyRequestFactory;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.SmsProxy;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
-
 //classe creata in data 10/02/2012
 public class ManageContacts{
 	
 	private boolean modified = false;
+	private AsyncContactSync asyncUpdate;
 	
 	public String retrieveName(Context context,String number) {
 	
@@ -96,5 +95,11 @@ public class ManageContacts{
 			}});
 		
 		return modified;
+	}
+	
+	public void retrieveAllContact(AllRightSMSActivity ctx)
+	{	
+        asyncUpdate = new AsyncContactSync(ctx);
+		asyncUpdate.execute();		
 	}
 }

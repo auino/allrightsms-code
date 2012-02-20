@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Utility methods for getting the base URL for client-server communication and
@@ -113,6 +114,13 @@ public class Util {
      */
     private static final Map<Context, String> URL_MAP = new HashMap<Context, String>();
 
+    /*
+     * Display a toast notification containing the given string 
+     */
+    public static void  generateToastNotification(Context ctx, String message) {
+    	Toast.makeText(ctx,message,Toast.LENGTH_SHORT).show();
+	}
+    
     /**
      * Display a notification containing the given string.
      */
@@ -242,8 +250,8 @@ public class Util {
             }
         }
 
-    //  return new String("http://10.0.2.2:8888"); //modified for redirect correctly to local server - EMULATOR
-       return new String("https://allrightsms.appspot.com");
+      return new String("http://10.0.2.2:8888"); //modified for redirect correctly to local server - EMULATOR
+   //    return new String("https://allrightsms.appspot.com");
        // return url;
     }
 

@@ -118,6 +118,13 @@ public class AccountsActivity extends Activity {
             }
         }
     }
+    
+    @Override
+    protected void onStop(){
+    	super.onStop();
+    	
+    	
+    }
 
     // Manage UI Screens
 

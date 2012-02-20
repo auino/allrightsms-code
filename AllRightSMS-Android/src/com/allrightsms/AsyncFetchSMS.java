@@ -11,18 +11,19 @@ import com.allrightsms.shared.SmsProxy;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
-public class AsyncFetchSMS extends AsyncTask<Long, Void, List<SmsProxy>> {
+public class AsyncFetchSMS extends AsyncTask<Long, Void, SmsProxy> {
 
 	private final AllRightSMSActivity activity;
-
+	private SmsProxy sms;
+	
 	public AsyncFetchSMS(AllRightSMSActivity activity) {
 		super();
 		this.activity = activity;
 	}
 
 	@Override
-	protected List<SmsProxy> doInBackground(Long... arguments) {
-		final List<SmsProxy> list = new ArrayList<SmsProxy>();
+	protected SmsProxy doInBackground(Long... arguments) {
+		
 
 		MyRequestFactory requestFactory = Util.getRequestFactory(activity,
 				MyRequestFactory.class);
@@ -33,22 +34,23 @@ public class AsyncFetchSMS extends AsyncTask<Long, Void, List<SmsProxy>> {
 			
 			@Override
 			public void onFailure(ServerFailure error) {
-				list.clear();
+				
 			}
 
 			@Override
-			public void onSuccess(SmsProxy arg0) {
-				// TODO Auto-generated method stub
-				list.add(arg0);
+			public void onSuccess(SmsProxy arg0) {				
+				sms = arg0;
 			}
 		});
 
-		return list;
+		return sms;
 	}
 
 	@Override
-	protected void onPostExecute(List<SmsProxy> sms) {
-		activity.sendSMS(sms); // al termine, notifico a AllrightSmsActivity del
+	protected void onPostExecute(SmsProxy sms) {
+	//	activity.sendSMS(sms); // al termine, notifico a AllrightSmsActivity del
 								// messaggio da inviare...
+		SendSMS sendsms = new SendSMS(activity);
+		sendsms.Sent(sms);
 	}
 }

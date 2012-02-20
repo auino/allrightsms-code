@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 	android:background="#000000">
 	
-    <!--  android:background="@drawable/gradient">
-    	  android:background="#000000">
-     -->
     
     <TextView
         android:id="@+id/header"
@@ -55,7 +52,7 @@
         android:textColor="#ffffff"
         android:text="@string/hello_world_text"
         android:textSize="16dip"/>
-
+      
     <TextView
         android:id="@+id/text_disconnect"
         android:layout_width="fill_parent"
@@ -69,4 +66,16 @@
         android:textColor="#ffffff"
         android:textSize="14dip" />
 
+  	 <Button
+  	     android:id="@+id/sync_contacts"
+  	     android:layout_width="fill_parent"
+  	     android:layout_height="wrap_content"
+  	     android:layout_alignParentLeft="true"
+  	     android:layout_below="@+id/hello_world"
+  	     android:layout_marginTop="17dp"
+  	     android:layout_weight="1"
+  	     android:gravity="center_horizontal"
+  	     android:padding="10dip"
+  	     android:text="@string/sync_contacts" />
+ 	
 </RelativeLayout>
