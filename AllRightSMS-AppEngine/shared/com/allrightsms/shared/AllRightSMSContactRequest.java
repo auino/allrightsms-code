@@ -10,7 +10,7 @@ import com.google.web.bindery.requestfactory.shared.ServiceName;
 public interface AllRightSMSContactRequest extends RequestContext {
 
 	Request<ContactProxy> createContact();
-	
+		
 	Request<Void> createContact(String name, String Phone);
 
 	Request<ContactProxy> readContact(Long id);

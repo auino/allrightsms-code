@@ -16,6 +16,16 @@ public class AllRightSMSServiceContact {
 		return null;
 	}
 	
+//	@ServiceMethod
+//	public boolean uploadContacts(List<MyContact> cont)
+//	{
+//		for (MyContact my : cont) {
+//			createContact(my.getName(),my.getNumber());
+//		}
+//		
+//		return true;
+//	}
+	
 	@ServiceMethod
 	public void createContact(String name, String Phone){
 		Contact c = new Contact();
