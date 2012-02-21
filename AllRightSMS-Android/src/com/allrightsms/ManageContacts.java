@@ -90,7 +90,6 @@ public class ManageContacts{
 
 			@Override
 			public void onSuccess(SmsProxy arg0) {
-				// TODO Auto-generated method stub
 				modified = true;
 			}});
 		

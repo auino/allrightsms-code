@@ -37,11 +37,7 @@ public class AllRightSMSService extends Service {
 
 		if (intent != null) {
 			mContext = getBaseContext();
-			// final String text = intent.getExtras().getString("text");
-			// final String num = intent.getExtras().getString("num");
-
-			// if(num.compareTo("") != 0)
-			// {
+			
 			Log.v("test", "Registrazione Service");
 			Toast.makeText(mContext, "Registrazione Service", Toast.LENGTH_SHORT).show();
 			Runnable r = new Runnable() {
@@ -53,7 +49,7 @@ public class AllRightSMSService extends Service {
 			};
 
 			new Thread(r).start();
-			// }
+			
 		}
 
 		return super.onStartCommand(intent, flags, startId);

@@ -54,6 +54,9 @@ public class AllRightSMSActivity extends Activity {
 	private AsyncFetchSMS asyncFetch;
 	private String mex ="";
 	private String number = "";
+	private Button syncContactButton;
+	private TextView synchronizationText;
+	
 	/**
 	 * The current context.
 	 */
@@ -214,6 +217,9 @@ public class AllRightSMSActivity extends Activity {
 	public void onDestroy() {
 		unregisterReceiver(mUpdateUIReceiver);
 		super.onDestroy();
+		//se imposto il service, qui devo killarlo
+//		Intent svc = new Intent(this, MyService.class);
+//		stopService(svc);
 	}
 
 	@Override
@@ -230,7 +236,9 @@ public class AllRightSMSActivity extends Activity {
 
 		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
 		final Button testConnection = (Button) findViewById(R.id.say_hello);
-	
+		syncContactButton = (Button) findViewById(R.id.sync_button);
+		synchronizationText = (TextView) findViewById(R.id.sync_text);
+		
 		testConnection.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				testConnection.setEnabled(false);
@@ -275,13 +283,10 @@ public class AllRightSMSActivity extends Activity {
 			}
 		});
 		
-		final Button syncContactButto = (Button) findViewById(R.id.sync_contacts);
-		
-		syncContactButto.setOnClickListener(new OnClickListener() {
+		syncContactButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				sincronizeContact();
 			}});
 	}
@@ -318,12 +323,16 @@ public class AllRightSMSActivity extends Activity {
 				Util.CONNECTED);
 		
 		if (Util.CONNECTED.equals(connectionStatus)) {
+			synchronizationText.setText(R.string.syncing_contacts);
 			ManageContacts man = new ManageContacts();
+			syncContactButton.setEnabled(false);
     		man.retrieveAllContact(this);	
 		}	
 	}
 	
 	public void ContactSyncronized(){
+		syncContactButton.setEnabled(true);
+		synchronizationText.setText(R.string.syncing_contacts_empty);
 		Util.generateToastNotification(getApplicationContext(), "Contacts Synchronized");
 	}
 	
