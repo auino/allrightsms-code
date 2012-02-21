@@ -21,6 +21,12 @@ public class AllRightSMSService {
 	}
 
 	@ServiceMethod
+	public List<Sms> testLimitedQuery(int limit)
+	{
+		return db.testQueryLimit(limit);
+	}
+	
+	@ServiceMethod
 	public Sms readSms(Long id) {
 		return db.find(id);
 	}

@@ -16,11 +16,13 @@
 package com.allrightsms.client;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.allen_sauer.gwt.voices.client.Sound;
 import com.allen_sauer.gwt.voices.client.SoundController;
@@ -40,14 +42,17 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -58,14 +63,20 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 public class AllRightSMSWidget extends Composite {
 
 	private static final int THREADS_NUMBER = 3;
-	private static final int MESSAGES_NUMBER = 4;
+	private static int MESSAGES_NUMBER_ONE = 4;
+	private static int MESSAGES_NUMBER_TWO = 4;
+	private static int MESSAGES_NUMBER_THREE = 4;
 	private static final int STATUS_DELAY = 4000;
 	private static final String STATUS_ERROR = "status error";
 	private static final String STATUS_NONE = "status none";
 	private static final String STATUS_SUCCESS = "status success";
 	private static final int DELAY_C = 60000; // delay of research new contacts
-	private static final int DELAY_MS = 15000; // delay of research incoming, 1000 minute
+	private static final int DELAY_MS = 15000; // delay of research incoming,
+												// 1000 minute
 	private static final String UNKNOWN = "Unknown";
+	private ArrayList<Anchor> currentVisibilityOne = new ArrayList<Anchor>();
+	private ArrayList<Anchor> currentVisibilityTwo = new ArrayList<Anchor>();
+	private ArrayList<Anchor> currentVisibilityThree = new ArrayList<Anchor>();
 
 	private static final String BUTTON_STYLE = "send centerbtn";
 	private SmsProxy smsProxy;
@@ -102,6 +113,135 @@ public class AllRightSMSWidget extends Composite {
 	@UiField
 	Button sendMessageButton;
 
+	@UiField
+	DivElement NumberToShowOne; //è il div da far apparire e scomparire in base ai thread visibili
+	
+	@UiField
+	DivElement NumberToShowTwo; //è il div da far apparire e scomparire in base ai thread visibili
+	
+	@UiField
+	DivElement NumberToShowThree; //è il div da far apparire e scomparire in base ai thread visibili
+	
+	@UiField
+	Anchor numberToShowOne_4;
+
+	@UiHandler("numberToShowOne_4")
+	public void handleMyClickOne_4(ClickEvent event) {
+		setStatus("Cliccato su 4...", false);
+		changeVisibilityNumber(1, 4);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowOne_8;
+	
+	@UiHandler("numberToShowOne_8")
+	public void handleMyClickOne_8(ClickEvent event) {
+		setStatus("Cliccato su 8...", false);
+		changeVisibilityNumber(1, 8);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowOne_12;
+	
+	@UiHandler("numberToShowOne_12")
+	public void handleMyClickOne_12(ClickEvent event) {
+		setStatus("Cliccato su 12...", false);
+		changeVisibilityNumber(1, 12);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowOne_all;
+	
+	@UiHandler("numberToShowOne_all")
+	public void handleMyClickOne_All(ClickEvent event) {
+		setStatus("Cliccato su All...", false);
+		changeVisibilityNumber(1, 100);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowTwo_4;
+
+	@UiHandler("numberToShowTwo_4")
+	public void handleMyClickTwo_4(ClickEvent event) {
+		setStatus("Cliccato su 4...", false);
+		changeVisibilityNumber(2, 4);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowTwo_8;
+	
+	@UiHandler("numberToShowTwo_8")
+	public void handleMyClickTwo_8(ClickEvent event) {
+		setStatus("Cliccato su 8...", false);
+		changeVisibilityNumber(2, 8);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowTwo_12;
+	
+	@UiHandler("numberToShowTwo_12")
+	public void handleMyClickTwo_12(ClickEvent event) {
+		setStatus("Cliccato su 12...", false);
+		changeVisibilityNumber(2, 12);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowTwo_all;
+	
+	@UiHandler("numberToShowTwo_all")
+	public void handleMyClickTwo_All(ClickEvent event) {
+		setStatus("Cliccato su All...", false);
+		changeVisibilityNumber(2, 100);
+		constructForNumber();
+	}
+	
+	@UiField
+	Anchor numberToShowThree_4;
+
+	@UiHandler("numberToShowThree_4")
+	public void handleMyClickThree_4(ClickEvent event) {
+		setStatus("Cliccato su 4...", false);
+		changeVisibilityNumber(3, 4);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowThree_8;
+	
+	@UiHandler("numberToShowThree_8")
+	public void handleMyClickThree_8(ClickEvent event) {
+		setStatus("Cliccato su 8...", false);
+		changeVisibilityNumber(3, 8);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowThree_12;
+	
+	@UiHandler("numberToShowThree_12")
+	public void handleMyClickThree_12(ClickEvent event) {
+		setStatus("Cliccato su 12...", false);
+		changeVisibilityNumber(3, 12);
+		constructForNumber();
+	}
+
+	@UiField
+	Anchor numberToShowThree_all;
+	
+	@UiHandler("numberToShowThree_all")
+	public void handleMyClickThree_All(ClickEvent event) {
+		setStatus("Cliccato su All...", false);
+		changeVisibilityNumber(3, 100);
+		constructForNumber();
+	}
+	
 	@UiField
 	SmsTable smsTableOne;
 
@@ -242,25 +382,57 @@ public class AllRightSMSWidget extends Composite {
 					+ "</div>";
 			this.setHTML(this.getHTML() + html);
 		}
+	}
+	
+	private int converToIndex(int number)
+	{
+		switch (number) {
+		case 4:
+			return 0;
+			
 
-		/*
-		 * StackPanel (che è una figata) String text1 =
-		 * "Lorem ipsum dolor sit amet..."; String text2 =
-		 * "Sed egestas, arcu nec accumsan..."; String text3 =
-		 * "Proin tristique, elit at blandit...";
-		 * 
-		 * HTML html = new HTML(
-		 * "This is <b>HTML</b>.  It will be interpreted as such if you specify "
-		 * + "the asHTML flag.", true);
-		 * 
-		 * Label label = new Label("A"); this.add(label, "One", false); label =
-		 * new Label(text2); this.add(html, "Ciao", true);
-		 * 
-		 * this. label = new Label(text3); this.add(label, "Three", false);
-		 * this.setSize("400px", "200px");
-		 * 
-		 * }
-		 */
+		case 8:
+			return 1;
+		
+		case 12:
+			return 2;
+		
+		default: //number==100
+			return 3;
+		}
+	}
+
+	private void changeVisibilityNumber(int thread, int newValue) {
+		String toNew = ""+newValue;
+		if(newValue==100)
+			toNew = "All";
+		
+		switch (thread) {
+		case 1:
+			//tolgo in vecchio valore dal grassetto
+			currentVisibilityOne.get(converToIndex(MESSAGES_NUMBER_ONE)).setHTML("<p>"+MESSAGES_NUMBER_ONE+"</p>");
+			//imposto il nuovo valere in grassetto
+			
+			currentVisibilityOne.get(converToIndex(newValue)).setHTML("<b>"+toNew+"</b>");
+			MESSAGES_NUMBER_ONE = newValue;
+			break;
+
+		case 2:
+			//tolgo in vecchio valore dal grassetto
+			currentVisibilityTwo.get(converToIndex(MESSAGES_NUMBER_TWO)).setHTML(""+MESSAGES_NUMBER_TWO);
+			//imposto il nuovo valere in grassetto
+			currentVisibilityTwo.get(converToIndex(newValue)).setHTML("<b>"+toNew+"</b>");
+			MESSAGES_NUMBER_TWO = newValue;
+			break;
+
+		default: // case 3:
+			//tolgo in vecchio valore dal grassetto
+			currentVisibilityThree.get(converToIndex(MESSAGES_NUMBER_THREE)).setHTML(""+MESSAGES_NUMBER_THREE);
+			//imposto il nuovo valere in grassetto
+			currentVisibilityThree.get(converToIndex(newValue)).setHTML("<b>"+toNew+"</b>");
+			MESSAGES_NUMBER_THREE = newValue;
+			break;
+		}
 	}
 
 	public AllRightSMSWidget() {
@@ -268,8 +440,38 @@ public class AllRightSMSWidget extends Composite {
 
 		messageArea.setTitle("Message");
 		recipientNumber.setTitle("Cell number");
+
+		currentVisibilityOne.add(numberToShowOne_4);
+		currentVisibilityOne.add(numberToShowOne_8);
+		currentVisibilityOne.add(numberToShowOne_12);
+		currentVisibilityOne.add(numberToShowOne_all);
 		
-		//imposto il placeholder nel suggestbox
+		numberToShowOne_4.setHTML("<b>4</4>");
+		numberToShowOne_8.setHTML("8");
+		numberToShowOne_12.setHTML("12");
+		numberToShowOne_all.setHTML("All");
+		
+		currentVisibilityTwo.add(numberToShowTwo_4);
+		currentVisibilityTwo.add(numberToShowTwo_8);
+		currentVisibilityTwo.add(numberToShowTwo_12);
+		currentVisibilityTwo.add(numberToShowTwo_all);
+		
+		numberToShowTwo_4.setHTML("<b>4</4>");
+		numberToShowTwo_8.setHTML("8");
+		numberToShowTwo_12.setHTML("12");
+		numberToShowTwo_all.setHTML("All");
+		
+		currentVisibilityThree.add(numberToShowThree_4);
+		currentVisibilityThree.add(numberToShowThree_8);
+		currentVisibilityThree.add(numberToShowThree_12);
+		currentVisibilityThree.add(numberToShowThree_all);
+		
+		numberToShowThree_4.setHTML("<b>4</4>");
+		numberToShowThree_8.setHTML("8");
+		numberToShowThree_12.setHTML("12");
+		numberToShowThree_all.setHTML("All");
+
+		// imposto il placeholder nel suggestbox
 		recipientNumber.getElement().setAttribute("placeHolder", "Cell Number");
 
 		sayHelloButton.getElement().setClassName("send centerbtn");
@@ -303,10 +505,11 @@ public class AllRightSMSWidget extends Composite {
 			@Override
 			public void onClick(ClickEvent event) {
 				// creo l'sms sul server
-				if (!recipientNumber.getValue().isEmpty() & !messageArea.getValue().isEmpty())
+				if (!recipientNumber.getValue().isEmpty()
+						& !messageArea.getValue().isEmpty())
 					create();
 				else
-				 setStatus("Impossibile inviare il messaggio", false);
+					setStatus("Impossibile inviare il messaggio", false);
 			}
 		});
 
@@ -402,7 +605,7 @@ public class AllRightSMSWidget extends Composite {
 		// updateButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(updateButton);
 		// Button queryButton = new Button();
-		// queryButton.setText("Query");
+		// queryButton.setText("Test Query Limited");
 		// queryButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(queryButton);
 		// Button deleteButton = new Button();
@@ -424,6 +627,11 @@ public class AllRightSMSWidget extends Composite {
 															// visibility
 		headerTwo.setAttribute("style", "display:none");
 		headerThree.setAttribute("style", "display:none");
+		
+		NumberToShowOne.setAttribute("style", "display:none");
+		NumberToShowTwo.setAttribute("style", "display:none");
+		NumberToShowThree.setAttribute("style", "display:none");
+		
 		messageStatus.setInnerText("Waiting for  synchronization!");
 		// inizialmente nessun div viene mostrato
 
@@ -461,7 +669,7 @@ public class AllRightSMSWidget extends Composite {
 				deleteAll();
 			}
 		});
-		//
+
 		// queryButton.addClickHandler(new ClickHandler() {
 		// @Override
 		// public void onClick(ClickEvent event) {
@@ -483,7 +691,7 @@ public class AllRightSMSWidget extends Composite {
 				return true;
 			}
 		}, DELAY_MS);
-		
+
 		// temporizzo l'aggiornamento dei nuovi contatti, ogni ora
 		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 			@Override
@@ -573,6 +781,9 @@ public class AllRightSMSWidget extends Composite {
 		headerOne.setAttribute("style", "display:none");
 		headerTwo.setAttribute("style", "display:none");
 		headerThree.setAttribute("style", "display:none");
+		NumberToShowOne.setAttribute("style", "display:none");
+		NumberToShowTwo.setAttribute("style", "display:none");
+		NumberToShowThree.setAttribute("style", "display:none");
 		messageStatus.setInnerText("No message sent or received!");
 	}
 
@@ -626,8 +837,9 @@ public class AllRightSMSWidget extends Composite {
 		for (SmsProxy s : allMessage) {
 			if (phoneNumber.size() > 0
 					&& s.getPhoneNumber().equals(phoneNumber.get(0))
-					&& foundOne < MESSAGES_NUMBER) {
+					&& foundOne < MESSAGES_NUMBER_ONE) {
 				headerOne.setAttribute("style", "display:block");
+				NumberToShowOne.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(0).add(s);
 				smsUserNumberOne.setText(s.getPhoneNumber());
 				if (smsUserNameOne.getText().equals(UNKNOWN))
@@ -637,8 +849,9 @@ public class AllRightSMSWidget extends Composite {
 			}
 			if (phoneNumber.size() > 1
 					&& s.getPhoneNumber().equals(phoneNumber.get(1))
-					&& foundTwo < MESSAGES_NUMBER) {
+					&& foundTwo < MESSAGES_NUMBER_TWO) {
 				headerTwo.setAttribute("style", "display:block");
+				NumberToShowTwo.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(1).add(s);
 				smsUserNumberTwo.setText(s.getPhoneNumber());
 				if (smsUserNameTwo.getText().equals(UNKNOWN))
@@ -648,8 +861,9 @@ public class AllRightSMSWidget extends Composite {
 			}
 			if (phoneNumber.size() > 2
 					&& s.getPhoneNumber().equals(phoneNumber.get(2))
-					&& foundThree < MESSAGES_NUMBER) {
+					&& foundThree < MESSAGES_NUMBER_THREE) {
 				headerThree.setAttribute("style", "display:block");
+				NumberToShowThree.setAttribute("style", "display:block");
 				ThreadSmsReceived.get(2).add(s);
 				smsUserNumberThree.setText(s.getPhoneNumber());
 				if (smsUserNameThree.getText().equals(UNKNOWN))
@@ -688,22 +902,25 @@ public class AllRightSMSWidget extends Composite {
 		AllRightSMSRequest request = RequestFactory.allRightSMSRequest();
 		smsProxy = request.edit(smsProxy);
 
-		//se è un valore dell'autocomplete
+		// se è un valore dell'autocomplete
 		if (!NumberUtility.ValidatePhoneNumber(recipientNumber.getValue())) {
 			String name = NumberUtility.extractName(recipientNumber.getValue());
-			String number = NumberUtility.purgeNumber(recipientNumber.getMap().get(name));
-		
-			// se non sono riuscito ad estrarre il numero correttamente dall'autocomplete, elimino sms sul server
-			if(!NumberUtility.ValidatePhoneNumber(number)) 
+			String number = NumberUtility.purgeNumber(recipientNumber.getMap()
+					.get(name));
+
+			// se non sono riuscito ad estrarre il numero correttamente
+			// dall'autocomplete, elimino sms sul server
+			if (!NumberUtility.ValidatePhoneNumber(number))
 				request.deleteSms(smsProxy).fire(new Receiver<Void>() {
 
 					@Override
 					public void onSuccess(Void response) {
-						// TODO Auto-generated method stub
-						setStatus("Numero di telefono non corretto, sms non inviato", false);
+						setStatus(
+								"Numero di telefono non corretto, sms non inviato",
+								false);
 					}
 				});
-				
+
 			if (name != null) { // num è null se non è presente nella mappa...
 								// quindi è un numero inserito a mano
 				smsProxy.setPhoneNumber(NumberUtility.purgeNumber(number));
@@ -733,27 +950,27 @@ public class AllRightSMSWidget extends Composite {
 		});
 	}
 
-	private void query() {
-		RequestFactory.allRightSMSRequest().querySms()
-				.fire(new Receiver<List<SmsProxy>>() {
-					@Override
-					public void onSuccess(List<SmsProxy> smsList) {
-						String names = "\n";
-						for (SmsProxy sms : smsList) {
-							names += " (" + sms.getId() + "): "
-									+ sms.getEmailAddress() + "\n" + "Number: "
-									+ sms.getPhoneNumber() + " Text: "
-									+ sms.getTextmessage() + "\n Nome: "
-									+ sms.getName() + "\n sync="
-									+ sms.getSync() + " received="
-									+ sms.getReceived() + " read="
-									+ sms.getRead() + "\n";
-						}
-						Window.alert("QUERY SUCCESS: Count[" + smsList.size()
-								+ "] Values:" + names);
-					}
-				});
-	}
+	// private void query() {
+	// RequestFactory.allRightSMSRequest().testLimitedQuery(5)
+	// .fire(new Receiver<List<SmsProxy>>() {
+	// @Override
+	// public void onSuccess(List<SmsProxy> smsList) {
+	// String names = "\n";
+	// for (SmsProxy sms : smsList) {
+	// names += " (" + sms.getId() + "): "
+	// + sms.getEmailAddress() + "\n" + "Number: "
+	// + sms.getPhoneNumber() + " Text: "
+	// + sms.getTextmessage() + "\n Nome: "
+	// + sms.getName() + "\n sync="
+	// + sms.getSync() + " received="
+	// + sms.getReceived() + " read="
+	// + sms.getRead() + "\n";
+	// }
+	// Window.alert("QUERY SUCCESS: Count[" + smsList.size()
+	// + "] Values:" + names);
+	// }
+	// });
+	// }
 
 	private void deleteAll() {
 		RequestFactory.allRightSMSRequest().querySms()

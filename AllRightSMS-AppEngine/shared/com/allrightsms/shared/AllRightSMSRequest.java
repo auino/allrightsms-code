@@ -24,5 +24,7 @@ public interface AllRightSMSRequest extends RequestContext {
 	Request<List<SmsProxy>> queryUnReadSms(); //recupera sms ricevuti
 	
 	Request<Void> sentC2DM(); //test C2DM connection
+
+	Request<List<SmsProxy>> testLimitedQuery(int limit);
 }
 

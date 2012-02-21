@@ -1,11 +1,14 @@
 package com.allrightsms.server;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.servlet.ServletContext;
+
+import org.apache.http.cookie.SM;
 
 import com.allrightsms.shared.RequestSource;
 import com.google.android.c2dm.server.PMF;
@@ -174,7 +177,6 @@ public class DataStore {
 		item.setEmailAddress(getUserEmail());
 		if (item.getDueDate() == null) {
 			Calendar c = Calendar.getInstance();
-			//c.set(2011, 5, 11);
 			item.setDueDate(c.getTime());
 		}
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -201,6 +203,42 @@ public class DataStore {
 		}
 	}	
 
+	@SuppressWarnings("unchecked")
+	public List<Sms> testQueryLimit(int limit)
+	{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			//impostare la data indietro di 15 gg, se voglio sincronizzare gli ultimi 15 gg.
+			Date d = new Date();
+			//d.setTime(new Date().)
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.DAY_OF_MONTH, 15);
+			c.getTime();		
+			
+			
+			
+			Query query;
+			query = pm.newQuery("SELECT FROM " + Sms.class.getName()
+						+ " WHERE emailAddress=='"+ getUserEmail()+"' " 
+						+ "&& dueDate<='"+c.getTime()+"'"); 
+			
+			List<Sms> list = (List<Sms>) query.execute();
+			if (list.size() == 0) {
+				// Workaround for this issue:
+				// http://code.google.com/p/datanucleus-appengine/issues/detail?id=24
+				list.size();
+			}
+			return list;
+
+		} catch (RuntimeException e) {
+			System.out.println(e);
+			throw e;
+		} finally {
+			pm.close();
+		}
+		
+	}
+	
 	public static String getUserId() {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
