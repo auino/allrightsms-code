@@ -127,7 +127,6 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiHandler("numberToShowOne_4")
 	public void handleMyClickOne_4(ClickEvent event) {
-		setStatus("Cliccato su 4...", false);
 		changeVisibilityNumber(1, 4);
 		constructForNumber();
 	}
@@ -137,7 +136,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowOne_8")
 	public void handleMyClickOne_8(ClickEvent event) {
-		setStatus("Cliccato su 8...", false);
 		changeVisibilityNumber(1, 8);
 		constructForNumber();
 	}
@@ -147,7 +145,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowOne_12")
 	public void handleMyClickOne_12(ClickEvent event) {
-		setStatus("Cliccato su 12...", false);
 		changeVisibilityNumber(1, 12);
 		constructForNumber();
 	}
@@ -157,7 +154,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowOne_all")
 	public void handleMyClickOne_All(ClickEvent event) {
-		setStatus("Cliccato su All...", false);
 		changeVisibilityNumber(1, 100);
 		constructForNumber();
 	}
@@ -167,7 +163,6 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiHandler("numberToShowTwo_4")
 	public void handleMyClickTwo_4(ClickEvent event) {
-		setStatus("Cliccato su 4...", false);
 		changeVisibilityNumber(2, 4);
 		constructForNumber();
 	}
@@ -177,7 +172,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowTwo_8")
 	public void handleMyClickTwo_8(ClickEvent event) {
-		setStatus("Cliccato su 8...", false);
 		changeVisibilityNumber(2, 8);
 		constructForNumber();
 	}
@@ -187,7 +181,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowTwo_12")
 	public void handleMyClickTwo_12(ClickEvent event) {
-		setStatus("Cliccato su 12...", false);
 		changeVisibilityNumber(2, 12);
 		constructForNumber();
 	}
@@ -197,7 +190,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowTwo_all")
 	public void handleMyClickTwo_All(ClickEvent event) {
-		setStatus("Cliccato su All...", false);
 		changeVisibilityNumber(2, 100);
 		constructForNumber();
 	}
@@ -207,7 +199,6 @@ public class AllRightSMSWidget extends Composite {
 
 	@UiHandler("numberToShowThree_4")
 	public void handleMyClickThree_4(ClickEvent event) {
-		setStatus("Cliccato su 4...", false);
 		changeVisibilityNumber(3, 4);
 		constructForNumber();
 	}
@@ -217,7 +208,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowThree_8")
 	public void handleMyClickThree_8(ClickEvent event) {
-		setStatus("Cliccato su 8...", false);
 		changeVisibilityNumber(3, 8);
 		constructForNumber();
 	}
@@ -227,7 +217,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowThree_12")
 	public void handleMyClickThree_12(ClickEvent event) {
-		setStatus("Cliccato su 12...", false);
 		changeVisibilityNumber(3, 12);
 		constructForNumber();
 	}
@@ -237,7 +226,6 @@ public class AllRightSMSWidget extends Composite {
 	
 	@UiHandler("numberToShowThree_all")
 	public void handleMyClickThree_All(ClickEvent event) {
-		setStatus("Cliccato su All...", false);
 		changeVisibilityNumber(3, 100);
 		constructForNumber();
 	}
@@ -409,25 +397,33 @@ public class AllRightSMSWidget extends Composite {
 		
 		switch (thread) {
 		case 1:
-			//tolgo in vecchio valore dal grassetto
-			currentVisibilityOne.get(converToIndex(MESSAGES_NUMBER_ONE)).setHTML("<p>"+MESSAGES_NUMBER_ONE+"</p>");
+			if(MESSAGES_NUMBER_ONE==100){
+				//tolgo in vecchio valore dal grassetto
+				currentVisibilityOne.get(converToIndex(MESSAGES_NUMBER_ONE)).setHTML("All");
+			}else
+				currentVisibilityOne.get(converToIndex(MESSAGES_NUMBER_ONE)).setHTML(""+MESSAGES_NUMBER_ONE);
 			//imposto il nuovo valere in grassetto
-			
 			currentVisibilityOne.get(converToIndex(newValue)).setHTML("<b>"+toNew+"</b>");
 			MESSAGES_NUMBER_ONE = newValue;
 			break;
 
 		case 2:
-			//tolgo in vecchio valore dal grassetto
-			currentVisibilityTwo.get(converToIndex(MESSAGES_NUMBER_TWO)).setHTML(""+MESSAGES_NUMBER_TWO);
+			if(MESSAGES_NUMBER_TWO==100){
+				//tolgo in vecchio valore dal grassetto
+				currentVisibilityTwo.get(converToIndex(MESSAGES_NUMBER_TWO)).setHTML("All");
+			}else
+				currentVisibilityTwo.get(converToIndex(MESSAGES_NUMBER_TWO)).setHTML(""+MESSAGES_NUMBER_TWO);
 			//imposto il nuovo valere in grassetto
 			currentVisibilityTwo.get(converToIndex(newValue)).setHTML("<b>"+toNew+"</b>");
 			MESSAGES_NUMBER_TWO = newValue;
 			break;
 
 		default: // case 3:
-			//tolgo in vecchio valore dal grassetto
-			currentVisibilityThree.get(converToIndex(MESSAGES_NUMBER_THREE)).setHTML(""+MESSAGES_NUMBER_THREE);
+			if(MESSAGES_NUMBER_THREE==100){
+				//tolgo in vecchio valore dal grassetto
+				currentVisibilityThree.get(converToIndex(MESSAGES_NUMBER_THREE)).setHTML("All");
+			}else
+				currentVisibilityThree.get(converToIndex(MESSAGES_NUMBER_THREE)).setHTML(""+MESSAGES_NUMBER_THREE);
 			//imposto il nuovo valere in grassetto
 			currentVisibilityThree.get(converToIndex(newValue)).setHTML("<b>"+toNew+"</b>");
 			MESSAGES_NUMBER_THREE = newValue;
@@ -682,7 +678,8 @@ public class AllRightSMSWidget extends Composite {
 
 		panel.add(wrapper);
 		RootPanel.get().add(panel);
-
+		retrieveReceivedSms();
+		
 		// temporizzo l'aggiornamento dei nuovi messaggi in arrivo
 		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 			@Override

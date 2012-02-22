@@ -31,25 +31,27 @@
 				</div>
 			
 				<!-- div per cambiare il numero di messaggi visualizzati ONE -->
-				<div class="user" ui:field="NumberToShowOne" style="display:block table-row; text-align:left; margin:0 auto; padding:2px; padding-right:10px; ackground-color:#f00;"> <!-- background-color:#f00; -->
+				<div class="user" ui:field="NumberToShowOne" style="display:block table-row; text-align:left; margin:0 auto; padding:2px; padding-right:10px;">
 					
-					<div style="display:table-cell; padding:2px; vertical-align:middle;"><p>Number of message to show: </p></div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowOne_4"></g:Anchor></p>
+						<p>Number of message to show: </p>
 					</div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowOne_8"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowOne_4"></g:Anchor></font> - </p>
+					</div>
+					<div style="display:table-cell; padding:2px; vertical-align:middle;">
+						<p><font class="hand"><g:Anchor ui:field="numberToShowOne_8"></g:Anchor></font> - </p>
 					</div>	
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowOne_12"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowOne_12"></g:Anchor></font> - </p>
 					</div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowOne_all"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowOne_all"></g:Anchor></font></p>
 					</div>
 				</div>
 				<!-- fine div per cambiare il numero di messaggi visualizzati ONE -->
 			
-				<div ui:field="headerOne" > <!-- primo thread di messaggi-->
+				<div ui:field="headerOne"> <!-- primo thread di messaggi-->
 					<div class="roundRect" style="padding:10px;">  
 						<div class="roundRect" style="display:block table-row; margin:0 auto; padding:10px; background-color:#000000; color:#ffffff;">
 							<div style="display:table-cell; padding:3px; vertical-align:middle;">
@@ -81,18 +83,20 @@
 				<!-- div per cambiare il numero di messaggi visualizzati TWO -->
 				<div class="user" ui:field="NumberToShowTwo" style="display:block table-row; text-align:left; margin:0 auto; padding:2px; padding-right:10px; ackground-color:#f00;"> <!-- background-color:#f00; -->
 					
-					<div style="display:table-cell; padding:2px; vertical-align:middle;"><p>Number of message to show: </p></div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowTwo_4"></g:Anchor></p>
+						<p>Number of message to show: </p>
+						</div>
+					<div style="display:table-cell; padding:2px; vertical-align:middle;">
+						<p><font class="hand"><g:Anchor ui:field="numberToShowTwo_4"></g:Anchor></font> - </p>
 					</div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowTwo_8"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowTwo_8"></g:Anchor></font> - </p>
 					</div>	
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowTwo_12"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowTwo_12"></g:Anchor></font> - </p>
 					</div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowTwo_all"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowTwo_all"></g:Anchor></font></p>
 					</div>
 				</div>
 				<!-- fine div per cambiare il numero di messaggi visualizzati TWO -->	
@@ -129,18 +133,20 @@
 				<!-- div per cambiare il numero di messaggi visualizzati THREE -->
 				<div class="user" ui:field="NumberToShowThree" style="display:block table-row; text-align:left; margin:0 auto; padding:2px; padding-right:10px; ackground-color:#f00;"> <!-- background-color:#f00; -->
 					
-					<div style="display:table-cell; padding:2px; vertical-align:middle;"><p>Number of message to show: </p></div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowThree_4"></g:Anchor></p>
+						<p>Number of message to show: </p>
 					</div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowThree_8"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowThree_4"></g:Anchor></font> - </p>
+					</div>
+					<div style="display:table-cell; padding:2px; vertical-align:middle;">
+						<p><font class="hand"><g:Anchor ui:field="numberToShowThree_8"></g:Anchor></font> - </p>
 					</div>	
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowThree_12"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowThree_12"></g:Anchor></font> - </p>
 					</div>
 					<div style="display:table-cell; padding:2px; vertical-align:middle;">
-						<p><g:Anchor ui:field="numberToShowThree_all"></g:Anchor></p>
+						<p><font class="hand"><g:Anchor ui:field="numberToShowThree_all"></g:Anchor></font></p>
 					</div>
 				</div>
 				<!-- fine div per cambiare il numero di messaggi visualizzati THREE -->	
