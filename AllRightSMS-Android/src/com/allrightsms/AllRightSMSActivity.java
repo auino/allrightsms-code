@@ -39,6 +39,7 @@ import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.NumberUtility;
 import com.allrightsms.shared.SmsChange;
 import com.allrightsms.shared.SmsProxy;
+import com.allrightsms.shared.Cripto.AES;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
@@ -52,11 +53,12 @@ public class AllRightSMSActivity extends Activity {
 	 */
 	private static final String TAG = "AllRightSMSActivity";
 	private AsyncFetchSMS asyncFetch;
-	private String mex ="";
+	private String mex = "";
 	private String number = "";
 	private Button syncContactButton;
 	private TextView synchronizationText;
-	
+	private AES aes;
+
 	/**
 	 * The current context.
 	 */
@@ -79,6 +81,13 @@ public class AllRightSMSActivity extends Activity {
 				message = getResources().getString(
 						R.string.registration_succeeded);
 				connectionStatus = Util.CONNECTED;
+				// qui il telefono è registrato, posso accedere all'account name
+				try {
+					aes = new AES(accountName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			} else if (status == DeviceRegistrar.UNREGISTERED_STATUS) {
 				message = getResources().getString(
 						R.string.unregistration_succeeded);
@@ -105,17 +114,20 @@ public class AllRightSMSActivity extends Activity {
 			final ManageContacts addContacts = new ManageContacts();
 
 			mex = "";
-			number ="";
+			number = "";
 			Object messages[] = (Object[]) bundle.get("pdus");
 			SmsMessage smsMessage[] = new SmsMessage[messages.length];
 			for (int n = 0; n < messages.length; n++) {
 				smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
 			}
 			// mi segno il numero e il testo del messaggio
-			for (SmsMessage s : smsMessage) { //concateno il messaggio anche se è piu lungo del previsto.
+			for (SmsMessage s : smsMessage) { // concateno il messaggio anche se
+												// è piu lungo del previsto.
 				mex += s.getMessageBody();
 			}
-			
+
+			mex = aes.encryptBase64(mex);
+
 			number = smsMessage[0].getOriginatingAddress();
 			new AsyncTask<Void, Void, Void>() {
 
@@ -166,7 +178,6 @@ public class AllRightSMSActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 
-		
 		SmsApplication smsApplication = (SmsApplication) getApplication();
 		smsApplication.setSMSListener(new SmsListener() {
 			public void onSmsUpdated(final String message, final long id) {
@@ -187,7 +198,7 @@ public class AllRightSMSActivity extends Activity {
 		if (Util.DISCONNECTED.equals(connectionStatus)) {
 			startActivity(new Intent(this, AccountsActivity.class));
 		}
-		
+
 		setScreenContent(R.layout.hello_world);
 	}
 
@@ -217,9 +228,9 @@ public class AllRightSMSActivity extends Activity {
 	public void onDestroy() {
 		unregisterReceiver(mUpdateUIReceiver);
 		super.onDestroy();
-		//se imposto il service, qui devo killarlo
-//		Intent svc = new Intent(this, MyService.class);
-//		stopService(svc);
+		// se imposto il service, qui devo killarlo
+		// Intent svc = new Intent(this, MyService.class);
+		// stopService(svc);
 	}
 
 	@Override
@@ -238,7 +249,7 @@ public class AllRightSMSActivity extends Activity {
 		final Button testConnection = (Button) findViewById(R.id.say_hello);
 		syncContactButton = (Button) findViewById(R.id.sync_button);
 		synchronizationText = (TextView) findViewById(R.id.sync_text);
-		
+
 		testConnection.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				testConnection.setEnabled(false);
@@ -282,15 +293,15 @@ public class AllRightSMSActivity extends Activity {
 				}.execute();
 			}
 		});
-		
+
 		syncContactButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				sincronizeContact();
-			}});
+			}
+		});
 	}
-	
 
 	// private final TimerTask t = new TimerTask() {
 	// final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
@@ -315,30 +326,30 @@ public class AllRightSMSActivity extends Activity {
 		}
 	}
 
-	//metodi per la sincronizzazione dei contatti col server
-	private void sincronizeContact()
-	{
-    	SharedPreferences prefs = Util.getSharedPreferences(mContext);
+	// metodi per la sincronizzazione dei contatti col server
+	private void sincronizeContact() {
+		SharedPreferences prefs = Util.getSharedPreferences(mContext);
 		String connectionStatus = prefs.getString(Util.CONNECTION_STATUS,
 				Util.CONNECTED);
-		
+
 		if (Util.CONNECTED.equals(connectionStatus)) {
 			synchronizationText.setText(R.string.syncing_contacts);
 			ManageContacts man = new ManageContacts();
 			syncContactButton.setEnabled(false);
-    		man.retrieveAllContact(this);	
-		}	
+			man.retrieveAllContact(this);
+		}
 	}
-	
-	public void ContactSyncronized(){
+
+	public void ContactSyncronized() {
 		syncContactButton.setEnabled(true);
 		synchronizationText.setText(R.string.syncing_contacts_empty);
-		Util.generateToastNotification(getApplicationContext(), "Contacts Synchronized");
+		Util.generateToastNotification(getApplicationContext(),
+				"Contacts Synchronized");
 	}
-	
+
 	// metodi per recuperare il nuovo SMS dal server
 	private void fetchSMS(long id) {
-		asyncFetch = new AsyncFetchSMS(this);
+		asyncFetch = new AsyncFetchSMS(this, aes);
 		asyncFetch.execute(id);
 	}
 

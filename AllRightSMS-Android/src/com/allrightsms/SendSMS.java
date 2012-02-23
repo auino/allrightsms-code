@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.allrightsms.shared.SmsProxy;
+import com.allrightsms.shared.Cripto.AES;
 
 import android.R.bool;
 import android.app.Activity;
@@ -17,12 +18,18 @@ import android.telephony.SmsManager;
 //implemented by Bruno
 public class SendSMS extends Activity {
 
-	AllRightSMSActivity activity;
+	private AllRightSMSActivity activity;
+	private AES aes;
 
 	public SendSMS(AllRightSMSActivity ctx) {
 		activity = ctx;
 	}
 
+	public SendSMS(AllRightSMSActivity ctx, AES key) {
+		activity = ctx;
+		aes = key;
+	}
+	
 	public boolean Sent(SmsProxy sms) {
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
@@ -31,7 +38,9 @@ public class SendSMS extends Activity {
 			return false;
 
 		SmsManager smsMan = SmsManager.getDefault();
-		ArrayList<String> messages = smsMan.divideMessage(sms.getTextmessage());
+		String smsText = aes.decryptBase64(sms.getTextmessage());
+		
+		ArrayList<String> messages = smsMan.divideMessage(smsText);
 		ArrayList<PendingIntent> sendIntent = new ArrayList<PendingIntent>();
 		ArrayList<PendingIntent> deliveryIntent = new ArrayList<PendingIntent>();
 
@@ -52,38 +61,38 @@ public class SendSMS extends Activity {
 			return false;
 		}
 		// registra il messaggio anche sul cell, in modo da poterlo vedere
-		registerToDevice(sms.getPhoneNumber(), sms.getTextmessage(), sms.getDueDate()); //dovrebbe servire per
+		registerToDevice(sms.getPhoneNumber(), smsText , sms.getDueDate()); //dovrebbe servire per
 		
 
 		return true;
 	}
 
-	public boolean Send(AllRightSMSActivity ctx, String phoneNumber,
-			String message, Date date) {
-		activity = ctx;
-		String SENT = "SMS_SENT";
-		String DELIVERED = "SMS_DELIVERED";
-
-		if (Simulator.status)
-			return false;
-
-		PendingIntent sentPI = PendingIntent.getBroadcast(ctx, 0, new Intent(
-				SENT), 0);
-		PendingIntent deliveredPI = PendingIntent.getBroadcast(ctx, 0,
-				new Intent(DELIVERED), 0);
-
-		try {
-			SmsManager sms = SmsManager.getDefault();
-			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-		} catch (Exception e) {
-			// TODO: handle exception
-			return false;
-		}
-		// registerToDevice(phoneNumber, message, date); //dovrebbe servire per
-		// registrare il messaggio anche sul cell
-
-		return true;
-	}
+//	public boolean Send(AllRightSMSActivity ctx, String phoneNumber,
+//			String message, Date date) {
+//		activity = ctx;
+//		String SENT = "SMS_SENT";
+//		String DELIVERED = "SMS_DELIVERED";
+//
+//		if (Simulator.status)
+//			return false;
+//
+//		PendingIntent sentPI = PendingIntent.getBroadcast(ctx, 0, new Intent(
+//				SENT), 0);
+//		PendingIntent deliveredPI = PendingIntent.getBroadcast(ctx, 0,
+//				new Intent(DELIVERED), 0);
+//
+//		try {
+//			SmsManager sms = SmsManager.getDefault();
+//			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			return false;
+//		}
+//		// registerToDevice(phoneNumber, message, date); //dovrebbe servire per
+//		// registrare il messaggio anche sul cell
+//
+//		return true;
+//	}
 
 	private void registerToDevice(String to, String text, Date date) {
 		String ADDRESS = "address";

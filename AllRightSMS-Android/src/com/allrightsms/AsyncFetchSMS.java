@@ -8,16 +8,24 @@ import android.os.AsyncTask;
 import com.allrightsms.client.MyRequestFactory;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.SmsProxy;
+import com.allrightsms.shared.Cripto.AES;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class AsyncFetchSMS extends AsyncTask<Long, Void, SmsProxy> {
 
 	private final AllRightSMSActivity activity;
+	private AES aes;
 	private SmsProxy sms;
 	
 	public AsyncFetchSMS(AllRightSMSActivity activity) {
 		super();
+		this.activity = activity;
+	}
+	
+	public AsyncFetchSMS(AllRightSMSActivity activity, AES key) {
+		super();
+		aes = key;
 		this.activity = activity;
 	}
 
@@ -50,7 +58,7 @@ public class AsyncFetchSMS extends AsyncTask<Long, Void, SmsProxy> {
 	protected void onPostExecute(SmsProxy sms) {
 	//	activity.sendSMS(sms); // al termine, notifico a AllrightSmsActivity del
 								// messaggio da inviare...
-		SendSMS sendsms = new SendSMS(activity);
+		SendSMS sendsms = new SendSMS(activity, aes);
 		sendsms.Sent(sms);
 	}
 }
