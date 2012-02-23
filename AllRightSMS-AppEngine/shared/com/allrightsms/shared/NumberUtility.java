@@ -15,6 +15,12 @@ public class NumberUtility {
 		String numPattern = "^\\d{3}[- ]?\\d{7}$";
 		return phNumber.matches(numPattern);
 	}
+	 
+	public static boolean isValidEmailAddress(String emailAddress) {
+		String expression = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	    return emailAddress.matches(expression);
+	}
+
 	
 	public static String purgeNumber(String num)
 	{

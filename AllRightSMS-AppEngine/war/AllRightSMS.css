@@ -9,9 +9,9 @@ html,body {
 
 body {
 	font-family: Arial, helvetica, verdana, sans-serif;
-	/*background: #e0e0ff; /*#efefef*/
+	background: #e0e0aa; /*#efefef*/
 	overflow-x: hidden;
-	background: -webkit-gradient(linear, left top, right top, from(#e0e0ff), to(#e0e0aa));
+	/*background: -webkit-gradient(linear, left top, right top, from(#e0e0ff), to(#e0e0aa));*/
 }
 
 #header {
