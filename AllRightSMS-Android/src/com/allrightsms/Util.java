@@ -250,8 +250,8 @@ public class Util {
             }
         }
 
-      return new String("http://10.0.2.2:8888"); //modified for redirect correctly to local server - EMULATOR
-    //   return new String("https://allrightsms.appspot.com");
+     // return new String("http://10.0.2.2:8888"); //modified for redirect correctly to local server - EMULATOR
+      return new String("https://allrightsms.appspot.com");
        // return url;
     }
 

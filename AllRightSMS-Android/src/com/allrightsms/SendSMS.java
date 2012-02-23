@@ -2,12 +2,10 @@ package com.allrightsms;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.allrightsms.shared.SmsProxy;
 import com.allrightsms.shared.Cripto.AES;
 
-import android.R.bool;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -29,17 +27,14 @@ public class SendSMS extends Activity {
 		activity = ctx;
 		aes = key;
 	}
-	
+
 	public boolean Sent(SmsProxy sms) {
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
 
-		if (Simulator.status)
-			return false;
-
 		SmsManager smsMan = SmsManager.getDefault();
 		String smsText = aes.decryptBase64(sms.getTextmessage());
-		
+
 		ArrayList<String> messages = smsMan.divideMessage(smsText);
 		ArrayList<PendingIntent> sendIntent = new ArrayList<PendingIntent>();
 		ArrayList<PendingIntent> deliveryIntent = new ArrayList<PendingIntent>();
@@ -51,49 +46,22 @@ public class SendSMS extends Activity {
 			deliveryIntent.add(PendingIntent.getBroadcast(activity, 0,
 					new Intent(DELIVERED), 0));
 		}
-		
+
 		try {
-			//supporta anche invio di sms multipli... 
-			smsMan.sendMultipartTextMessage(sms.getPhoneNumber(), null, messages, sendIntent, deliveryIntent); 
-			
+			// supporta anche invio di sms multipli...
+			smsMan.sendMultipartTextMessage(sms.getPhoneNumber(), null,
+					messages, sendIntent, deliveryIntent);
+
 		} catch (Exception e) {
-			// TODO: handle exception
 			return false;
 		}
-		// registra il messaggio anche sul cell, in modo da poterlo vedere
-		registerToDevice(sms.getPhoneNumber(), smsText , sms.getDueDate()); //dovrebbe servire per
-		
+		// registra il messaggio anche sul cell, 
+		//in modo da poterlo vedere
+		registerToDevice(sms.getPhoneNumber(), smsText, sms.getDueDate()); 
 
 		return true;
 	}
-
-//	public boolean Send(AllRightSMSActivity ctx, String phoneNumber,
-//			String message, Date date) {
-//		activity = ctx;
-//		String SENT = "SMS_SENT";
-//		String DELIVERED = "SMS_DELIVERED";
-//
-//		if (Simulator.status)
-//			return false;
-//
-//		PendingIntent sentPI = PendingIntent.getBroadcast(ctx, 0, new Intent(
-//				SENT), 0);
-//		PendingIntent deliveredPI = PendingIntent.getBroadcast(ctx, 0,
-//				new Intent(DELIVERED), 0);
-//
-//		try {
-//			SmsManager sms = SmsManager.getDefault();
-//			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			return false;
-//		}
-//		// registerToDevice(phoneNumber, message, date); //dovrebbe servire per
-//		// registrare il messaggio anche sul cell
-//
-//		return true;
-//	}
-
+	
 	private void registerToDevice(String to, String text, Date date) {
 		String ADDRESS = "address";
 		String DATE = "date";
@@ -101,7 +69,7 @@ public class SendSMS extends Activity {
 		String STATUS = "status";
 		String TYPE = "type";
 		String BODY = "body";
-	
+
 		ContentValues values = new ContentValues();
 		values.put(ADDRESS, to);
 		values.put(DATE, date.getTime()); // android prende la data in
