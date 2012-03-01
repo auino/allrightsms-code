@@ -629,10 +629,10 @@ public class AllRightSMSWidget extends Composite {
 		// deleteButton.setText("Delete");
 		// deleteButton.getElement().setClassName(BUTTON_STYLE);
 		// hp.add(deleteButton);
-		Button deleteAllButton = new Button();
-		deleteAllButton.setText("Delete All");
-		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
-		hp.add(deleteAllButton);
+//		Button deleteAllButton = new Button();
+//		deleteAllButton.setText("Delete All");
+//		deleteAllButton.getElement().setClassName(BUTTON_STYLE);
+//		hp.add(deleteAllButton);
 
 		// Button queryUnreadButton = new Button();
 		// queryUnreadButton.setText("Unread");
@@ -680,12 +680,12 @@ public class AllRightSMSWidget extends Composite {
 		// }
 		// });
 
-		deleteAllButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				deleteAll();
-			}
-		});
+//		deleteAllButton.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				deleteAll();
+//			}
+//		});
 
 		// queryButton.addClickHandler(new ClickHandler() {
 		// @Override
@@ -723,7 +723,6 @@ public class AllRightSMSWidget extends Composite {
 	private String extractEmail(String content) {
 	    String extracted = null;
 	    String regex = "(\\w+)(\\.\\w+)*@(\\w+\\.)(\\w+)(\\.\\w+)*";
-	 
 	    
 	    RegExp reg = RegExp.compile(regex);
 	    MatchResult match = reg.exec(content);
@@ -1006,18 +1005,18 @@ public class AllRightSMSWidget extends Composite {
 	// });
 	// }
 
-	private void deleteAll() {
-		RequestFactory.allRightSMSRequest().querySms()
-				.fire(new Receiver<List<SmsProxy>>() {
-					@Override
-					public void onSuccess(List<SmsProxy> smsList) {
-						for (SmsProxy sms : smsList) {
-							RequestFactory.allRightSMSRequest().deleteSms(sms)
-									.fire();
-						}
-						Window.alert("ALL MESSAGE DELETED SUCCESSFULLY");
-					}
-				});
-	}
+//	private void deleteAll() {
+//		RequestFactory.allRightSMSRequest().querySms()
+//				.fire(new Receiver<List<SmsProxy>>() {
+//					@Override
+//					public void onSuccess(List<SmsProxy> smsList) {
+//						for (SmsProxy sms : smsList) {
+//							RequestFactory.allRightSMSRequest().deleteSms(sms)
+//									.fire();
+//						}
+//						Window.alert("ALL MESSAGE DELETED SUCCESSFULLY");
+//					}
+//				});
+//	}
 
 }

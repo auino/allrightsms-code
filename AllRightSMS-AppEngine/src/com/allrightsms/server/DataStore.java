@@ -1,14 +1,11 @@
 package com.allrightsms.server;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.servlet.ServletContext;
-
-import org.apache.http.cookie.SM;
 
 import com.allrightsms.shared.RequestSource;
 import com.google.android.c2dm.server.PMF;
@@ -209,7 +206,7 @@ public class DataStore {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			//impostare la data indietro di 15 gg, se voglio sincronizzare gli ultimi 15 gg.
-			Date d = new Date();
+		
 			//d.setTime(new Date().)
 			Calendar c = Calendar.getInstance();
 			c.add(Calendar.DAY_OF_MONTH, 15);
