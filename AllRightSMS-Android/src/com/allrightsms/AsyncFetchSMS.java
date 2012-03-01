@@ -1,10 +1,6 @@
 package com.allrightsms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.AsyncTask;
-
 import com.allrightsms.client.MyRequestFactory;
 import com.allrightsms.shared.AllRightSMSRequest;
 import com.allrightsms.shared.SmsProxy;

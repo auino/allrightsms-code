@@ -1,9 +1,5 @@
 package com.allrightsms;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -75,7 +71,6 @@ public class ManageContacts{
 	}
 
 	public boolean addNameToSms(Context ctx,SmsProxy sms) {
-		// TODO Auto-generated method stub
 		
 		MyRequestFactory requestFactory = Util.getRequestFactory(ctx, MyRequestFactory.class);
 		AllRightSMSRequest request = requestFactory.allRightSMSRequest();

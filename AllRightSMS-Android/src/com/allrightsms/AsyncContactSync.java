@@ -1,17 +1,13 @@
 package com.allrightsms;
 
 import java.util.List;
-
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
-
 import com.allrightsms.client.MyRequestFactory;
 import com.allrightsms.shared.AllRightSMSContactRequest;
 import com.allrightsms.shared.ContactProxy;
-import com.allrightsms.shared.SmsProxy;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
 public class AsyncContactSync extends AsyncTask<Long, Void, List<ContactProxy>> {
@@ -68,10 +64,6 @@ public class AsyncContactSync extends AsyncTask<Long, Void, List<ContactProxy>> 
 	
 	private void uploadNewContact(Cursor cur, ContentResolver cr)
 	{
-		MyRequestFactory requestFactory = Util.getRequestFactory(activity,
-				MyRequestFactory.class);
-		final AllRightSMSContactRequest req = requestFactory.allRightSMSContactRequest();
-		
 		if (cur.getCount() > 0) {
 			while (cur.moveToNext()) {
 				
@@ -95,14 +87,10 @@ public class AsyncContactSync extends AsyncTask<Long, Void, List<ContactProxy>> 
 							phone = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 							
 						}
-						pCur.close();
-					
-				}
-				
+						pCur.close();	
+				}	
 				sendNewContactToServer(name, phone);
 			}
-			
-			
 		}
 		cur.close();		
 	}
