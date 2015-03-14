@@ -1,0 +1,1 @@
+Android app to syncronize, receive and send sms using your desktop throught wifi/mobile network
